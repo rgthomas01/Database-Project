@@ -1,0 +1,134 @@
+{% extends "main.j2" %}
+
+{% block title %}38C - Database Administration{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+<!-- 1. Set Heading for all delete pages -->
+<!-------------------------------------------------->
+{% set deleteHeading %}
+{% if deleted == False %}
+<h3>Delete {{dbEntity[:-1]}}</h3>
+    <p>Please review the information below and confirm you would like to delete the {{dbEntity[:-1]}}, or select "Return to Results".</p>
+
+{% elif deleted == True %}
+<h3>Delete {{dbEntity[:-1]}}</h3>
+    <p>You have succesffully deleted the following {{dbEntity[:-1]}} from the database:"</p>
+{% endif %}
+{% endset %}
+
+<!-- 2.1 delete employees page --!> 
+<!-------------------------------------------------->
+{% set deleteEmployeesPage %}
+    <div>
+        <!-- Pre-fill values when called to delete -->
+          <p><b>Employee ID:</b> {{deleteRecord['eeId']}}</p>
+          <p><b>First Name:</b> {{deleteRecord['eeFirstName']}}</p>
+          <p><b>Last Name:</b> {{deleteRecord['eeLastName']}}
+          <p><b>Position:</b> {{deleteRecord['eePosition']}}</p>
+    </div>
+
+{% endset %}
+
+<!-- 2.1 delete customers page --!> 
+<!-------------------------------------------------->
+{% set deleteCustomersPage %}
+    <div>
+        <!-- Pre-fill values when called to delete -->
+          <p><b>Customer ID:</b> {{deleteRecord['customerId']}}</p>
+          <p><b>First Name:</b> {{deleteRecord['customerFirstName']}}</p>
+          <p><b>Last Name:</b> {{deleteRecord['customerLastName']}}
+          <p><b>Email:</b> {{deleteRecord['customerEmail']}}</p>
+          <p><b>Member Status:</b> {{deleteRecord['memberStatus']}}</p>
+    </div>
+
+{% endset %}
+
+
+<!-- 2.1 delete purchases page --!> 
+<!-------------------------------------------------->
+{% set deletePurchasesPage %}
+    <div>
+        <!-- Pre-fill values when called to delete -->
+          <p><b>Purchase ID:</b> {{deleteRecord['purchaseId']}}</p>
+          <p><b>Customer ID:</b> {{deleteRecord['customerId']}}</p>
+          <p><b>Purchase Date:</b> {{deleteRecord['purchaseDate']}}</p>
+          <p><b>Cost of Sale:</b> {{deleteRecord['costOfSale']}}</p>
+          <p><b>Employee ID:</b>  {{deleteRecord['eeId']}}</p>
+    </div>
+
+{% endset %}
+
+
+<!-- 2.1 delete items page --!> 
+<!-------------------------------------------------->
+{% set deleteItemsPage %}
+    <div>
+        <!-- Pre-fill values when called to delete -->
+          <p><b>Item ID:</b> {{deleteRecord['itemId']}}</p>
+          <p><b>Item Name:</b> {{deleteRecord['itemName']}}</p>
+          <p><b>Item Price:</b> ${{deleteRecord['itemPrice']}}</p>
+          <p><b>Description:</b> {{deleteRecord['itemDescription']}}</p>
+          <p><b>Item Type:</b>  {{deleteRecord['itemType']}}</p>
+          <p><b>Inventory Remaining:</b> {{deleteRecord['inventoryOnHand']}}</p>
+    </div>
+
+{% endset %}
+
+
+<!-- 3. Render the relevant create/update form -->
+<!-------------------------------------------------->
+{% block content %}
+<!-- Page heading -->
+<div> 
+    <h2>{{dbEntity.capitalize()}}</h2>
+    <hr> 
+
+<!-- 4. Create / update new dbEntity -->
+<!-------------------------------------------------->
+{% if deleted == False %}
+{{ deleteHeading }}
+    {% if dbEntity == "employees" %}
+        {{ deleteEmployeesPage }}
+    {% elif dbEntity == "customers" %}
+        {{ deleteCustomersPage }}
+    {% elif dbEntity == "purchases" %}
+        {{ deletePurchasesPage }}
+    {% elif dbEntity == "items" %}
+       {{ deleteItemsPage }}
+    {% endif %}
+
+    <form action="/{{dbEntity}}/delete" method="POST">
+      <div class="alert alert-danger" role="alert" style="max-width: 500px">
+        <b>Warning:</b> Clicking "Delete {{dbEntity[:-1].capitalize()}}" below will permanently delete the {{dbEntity[:-1]}} from the database. 
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="confirmDelete" name="confirmDelete" value="yes" required>
+        <label class="form-check-label" for="confirmDelete">Yes I would like to delete the {{dbEntity[:-1]}}</label>
+      </div>
+      <button type="submit" class="btn btn-outline-danger">Delete {{dbEntity[:-1].capitalize()}}</button>
+      <a href="/{{dbEntity}}" class="btn btn-outline-primary">Return to search</a>
+    </form>
+
+<!-- 5. Confirm new dbEntity created / updated -->
+<!-------------------------------------------------->
+<!-- NOTE: THIS IS NOT PICKING UP THE DATA SINCE IT HAPPENS AFTER THR GET REQUEST-->
+{% elif deleted == True %}
+    <h3>{{dbEntity[:-1].capitalize()}} successfully {{operation}}d.</h3>
+    {% if dbEntity == "employees" %}
+        {{ deleteEmployeesPage }}
+    {% elif dbEntity == "customers" %}
+        {{ deleteCustomersPage }}
+    {% elif dbEntity == "purchases" %}
+        {{ deletePurchasesPage }}
+    {% elif dbEntity == "items" %}
+        {{ deleteItemsPage }}
+
+    {% endif %}
+    <a href="/{{dbEntity}}" class="btn btn-outline-primary">Return to search</a> <a href="/{{dbEntity}}/create" class="btn btn-outline-primary">Return to create</a>
+{% endif %}
+
+</div>
+{% endblock %}
+

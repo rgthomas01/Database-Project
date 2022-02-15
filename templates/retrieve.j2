@@ -1,0 +1,258 @@
+{% extends "main.j2" %}
+
+{% block title %}38C - Database Administration{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+  
+{% block content %}
+<div> 
+  <h2>{{dbEntity.capitalize()}}</h2>
+  <hr> 
+
+
+    <!-- Initial landing Page - retrieve or create -->
+    <!-------------------------------------------------->
+    {% if search == False and created == False %}
+
+      <div class="form-group" style="max-width: 800px">
+
+        <h3>Query {{dbEntity}}</h3>
+        <p>Please enter {{dbEntity[:-1]}} information below to query the {{dbEntity}} database or select "Retrieve all" to see a full listing of {{dbEntity}}.</p> </p>
+
+        <!-- Set some re-used elements for all retrieval forms-->
+        <!-------------------------------------------------->
+
+        <!-- Retrieve all form for any query -->
+        {% set retrieveAllForm %}
+          <!--<div class="form-group">-->
+            <h4>Retrieve all {{dbEntity}}</h4>
+              <form action="/{{dbEntity}}" method="GET">
+                <div class="form-row">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="retrieveAll" name="retrieveAll" value="retrieveAll" required>
+                    <label class="form-check-label" for="defaultCheck1">
+                      Retrieve all {{dbEntity}}
+                    </label>
+                  </div>
+                </div>
+                {{ searchButton }}
+              </form>
+          <!--</div>-->
+        {% endset %}
+
+        <!-- Return to search button -->
+        {% set returnToSearchButton %}
+          <a href=/{{dbEntity}} class="btn btn-outline-primary">Return to search</a>
+        {% endset %}
+
+        <!-- Create new dbEntity button -->
+        {% set createNewEntityButton %}
+          <hr>
+          <h3>Create new {{dbEntity[:-1]}}</h3>
+          <p>Click below to enter informaiton for a new {{dbEntity[:-1]}}.</p>
+          <a href="/{{dbEntity}}/create" class="btn btn-outline-primary">Create {{dbEntity[:-1]}}</a>
+        {% endset %}
+
+        <!-- Render dbEntity-specific retrieve/create forms-->
+        <!-------------------------------------------------->
+
+        <!-- dbEntity is Employees -->
+        <!-------------------------------------------------->
+        {% if dbEntity == "employees" %}
+        <!-- Retrieval query form -->
+          <form action="/{{dbEntity}}" method="GET">
+            <div class="form-row">
+              <div class="col-2">
+                <input type="text" class="form-control" id="eeId" name="eeId" placeholder="ID">
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" id="eeFirstName" name="eeFirstName" placeholder="First Name">
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" id="eeLastName" name="eeLastName" placeholder="Last Name">
+              </div>
+            </div>
+            <div class="form-row">
+            {{ searchButton }}
+            </div>
+          </form>
+          <!-- Retrieve all form -->
+          {{ retrieveAllForm }}
+          <!-- Create employee link --!> 
+          {{ createNewEntityButton }}
+
+        <!-- dbEntity is Customers -->
+        <!-------------------------------------------------->
+        {% elif dbEntity == "customers" %}
+        <!-- Retrieval query form -->
+          <form action="/{{dbEntity}}" method="GET">
+            <div class="form-row">
+              <div class="col-2">
+                <input type="text" class="form-control" id="customerId" name="customerId" placeholder="ID">
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" id="customerFirstName" name="customerFirstName" placeholder="First Name">
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" id="customerLastName" name="customerLastName" placeholder="Last Name">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-5">
+                <input type="text" class="form-control" id="customerEmail" name="customerEmail" placeholder="Email">
+              </div>
+            </div>
+            <div class="form-row">
+              {{ searchButton }}
+            </div>
+          </form>
+          <!-- Retrieve all form -->
+          {{ retrieveAllForm }}
+          <!-- Create customer link --!> 
+          {{ createNewEntityButton }}
+
+        <!-- dbEntity is Purchases -->
+        <!-------------------------------------------------->
+        <!-- dbEntity is Purchases -->
+        {% elif dbEntity == "purchases" %}
+          <form action="/{{dbEntity}}">
+            <div class="form-row">
+              <div class="col-4">
+                <label for="purchaseDate">Purchase date</label>
+                <input type="date" class="form-control" id="purchaseDate" name="purchaseDate">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-3">
+                <input type="text" class="form-control" id="purchaseId" name="purchaseId" placeholder="Purchase ID">
+              </div>
+              <div class="col-3">
+                <input type="text" class="form-control" id="customerId" name="customerId" placeholder="Customer ID">
+              </div>
+              <div class="col-3">
+                <input type="text" class="form-control" id="eeId" name="eeId" placeholder="Employee ID">
+              </div>
+            </div>
+            <div class="form-row">
+              {{ searchButton }}
+            </div>
+          </form>
+          <!-- Retrieve all form -->
+          {{ retrieveAllForm }}
+          <!-- Create purchase link -->
+          {{ createNewEntityButton }}
+
+        <!-- dbEntity is Items -->
+        <!-------------------------------------------------->
+        <!-- dbEntity is Items -->
+        {% elif dbEntity == "items" %}
+          <form action="/{{dbEntity}}">
+            <div class="form-row">
+              <div class="col-3">
+                <input type="text" class="form-control" id="itemId" name="itemId" placeholder="Item ID">
+              </div>
+              <div class="col-3">
+                <input type="text" class="form-control" id="itemName" name="itemName" placeholder="Item Name">
+              </div>
+              <div class="col-3">
+                <input type="number" min="1" step="0.01" class="form-control" id="itemPrice" name="itemPrice" placeholder="Price">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-5">
+                <label for="itemType">Item Type</label>
+                <select class="form-control" id="itemType" name="itemType" value="itemType">
+                  <option value="" disabled selected>Select your option</option>
+                  <option>Mountain Bike</option>
+                  <option>Road Bike</option>
+                  <option>Accessory</option>
+                  <option>Apparel</option>
+                </select>              
+              </div>
+            </div>
+            <div class="form-row">
+              {{ searchButton }}
+            </div>
+          </form>
+          <!-- Retrieve all form -->
+          {{ retrieveAllForm }}
+          <!-- Create item link -->
+          {{ createNewEntityButton }}
+ 
+        {% endif %}
+
+
+      <!-- End of retrieve/create -->
+      </div>
+
+
+    <!-- Retrieval performed - with or without results  -->
+    <!-------------------------------------------------->
+    {% elif search == True and created == False %}
+
+      <!-- Retrived NO results  -->
+      <!-------------------------------------------------->
+      {% if data == None %}
+        <p>Your search returned no results.</p>
+        {{ returnToSearchButton }}
+
+      <!-- Retrived YES results -->
+      <!-------------------------------------------------->     
+      {% elif data != None %}
+          <div>
+            <table class="table table table-striped table-hover">
+              <legend>Results</legend>
+              <thead>
+                <tr>
+                  {% for col in data[0].keys() %}
+                  <th>{{col}}</th>
+                  {% endfor %}
+                  <th>Modify</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>               
+                {% for row in data %}
+                  <tr>
+                    {% for key in row.keys() %}
+                      <td>{{row[key]}}</td>
+                    {% endfor %}
+                    <td>
+                      <form method="GET" action="{{dbEntity}}/update">
+                        <!-- Note: <input> takes the first key/val from row dict, which should be entity ID-->
+                        <input type="hidden" name="{{row.keys() | first}}" value="{{row.values() | first}}"> 
+                        <a onclick="this.parentNode.submit();" class="btn btn-sm btn-outline-secondary">update</a>
+                      </form>
+                    </td>
+                    <td>
+                      <form method="GET" action="{{dbEntity}}/delete">
+                        <input type="hidden" name="{{row.keys() | first}}" value="{{row.values() | first}}"> 
+                        <a onclick="this.parentNode.submit();" class="btn btn-sm btn-outline-danger">delete</a>
+                      </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {{ returnToSearchButton }}
+          </div>
+        <a href=/{{dbEntity}} class="btn btn-outline-primary">Return to search</a>
+      {% endif %}
+
+
+    <!-- New dbEntity Created -->
+    <!-------------------------------------------------->
+    {% elif created == True %}
+      <h3>{{dbEntity[:-1].capitalize()}} successfully created.</h3>
+        <br>
+        {% for key, value in data.items() %}
+        <p><b>{{key}}:</b> {{value}}</p>
+        {% endfor %}
+        <br>
+        <a href=/{{dbEntity}} class="btn btn-outline-primary">Return to search</a>
+    {% endif %}
+
+</div>
+{% endblock %}  

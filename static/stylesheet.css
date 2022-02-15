@@ -1,0 +1,59 @@
+/* Top navbar override Bootstrap  */
+.navbar-brand {
+  color: #F4F4F8 !important;
+  font-weight: bold;
+}
+.nav-link {
+  color: #4A4C4C !important;
+}
+.bg-light{
+  background-color: #54DEFD !important;
+
+}
+
+
+/* Body et al */
+body {
+  background-color:#FFFBFA;  
+  padding: 1em;
+}
+
+h1 {
+  /* color:#49c6e5ff; */
+  color: #525c66;
+
+}
+
+/* .badge.badge-primary {
+  background-color: #49C6E5;
+
+}
+.badge.badge-light {
+  background-color: #a7a8a8;
+  color: white !important;
+} */
+
+/* .update-delete-link {
+  color:#209cb8 !important;
+  font-weight: bolder;
+} */
+
+div {
+  padding: .5rem;
+  margin-right: 0;
+  margin-left: 0;
+  border-width: .2rem;
+}
+
+thead {
+  text-align: center !important;
+}
+td {
+  text-align: center !important;
+}
+
+
+
+caption {
+  padding: 10px;
+}
