@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <!-- <link href="../static/stylesheet.css" rel="stylesheet" type="text/css"> -->
+    <title>Customer Records</title>
+  </head>
+   <h2> Customer Record Results </h2>
+   <br>
+   <h3>Successssssssssssss</h3>
+        <table>
+            <thead>
+                <tr>
+                    <!-- Iterate through each key in the first entry to get the
+                    column name -->
+                    {% for key in Customers[0].keys() %}
+
+                    <!-- Create a <th> tag with the key inside of it, this will be
+                    our header row -->
+                    <th>{{ key }} </th>
+
+                    <!-- End of this for loop -->
+                    {% endfor %}
+                         
+                </tr>
+                
+                <tbody>
+
+                <!-- Now, iterate through every person in bsg_people -->
+                {% for person in Customers %}
+                <tr>
+                    <!-- Then iterate through every key in the current person dictionary -->
+                    {% for key in person.keys() %}
+
+                    <!-- Create a <td> element with the value of that key in it -->
+                    <td>{{person[key]}}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+        </table>
+</body>
+<h2>Update Record:</h2>
+
+      <form action='/customers/updated' method="POST">
+        
+        <label for="customerId">Customer ID </label>
+        <input type="int" value ="{{Customers[0].customerId}}" id="customerId" name="customerId" required readonly>
+        <br>
+
+        <label for="model">First Name:</label>
+        <input type="text" value ="{{Customers[0].customerFirstName}}"  id="customerFirstName" name="customerFirstName" pattern="[A-Za-z]{1,}"  required>
+        <br>
+
+        <label for="model">Last Name:</label>
+        <input type="text" value ="{{Customers[0].customerLastName}}"  id="customerLastName" name="customerLastName" pattern="[A-Za-z]{1,}" placeholder="" required>
+        <br>
+		<label for="model">Email:</label>
+        <input type="text" value ="{{Customers[0].customerEmail}}"  id="customerEmail" name="customerEmail" pattern="[A-Za-z]{1,}@[A-Za-z]{1,}.[A-Za-z]{3,}" placeholder="" required>
+        <br>
+
+		<label for="model">Membership Status:</label>
+        <select type="text"  id="membershipStatus" name="membershipStatus" pattern="[A-Za-z]{1,}" placeholder="" required>
+            <option value = "0">0</option>
+            <option value = "1">1</option>
+
+        
+
+
+        <br><br>
+                <input type="submit" value="Update" name="Update" class="btn btn-primary" style="margin:.5rem;">
+          </form>
+
