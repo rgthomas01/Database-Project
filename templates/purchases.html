@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Purchases</title>
+</head>
+<header>
+  <h1>Three Eight Cycles Purchase Records</h1>
+  <nav>
+    <div>
+        <ul>
+            <li> 
+              <a href="/">Home</a> 
+              <a href="/items">Items</a> 
+              <a href="/customers">Customers</a>
+              <a href="/employees">Employees</a> </li>
+        </ul>
+    </nav>
+  </div>
+
+</header>
+<body>
+
+<p></p>
+<p></p>
+<h2>Purchases</h2>
+<form action ="/purchases/add" method = "GET">
+  <fieldset>
+    <legend>Add Purchase</legend>
+    <p>Input purchase information</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Purchase ID</th>
+          <th>Customer ID</th>
+          <th>Purchase Date</th>
+          <th>Credit Card Number</th>
+          <th colspan  = "2">Credit Card Expiration</th>
+          <th>Cost</th>
+          <th>Employee ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr name = "purchase table rows">
+          <td name = "purchase_id">
+            
+          </td>
+          <td name = "customer_id">
+            <input
+            type = "int"
+            />
+          </td>
+          <td name = "purchase_date">
+            <input
+            type = "date"
+            />
+          </td>
+          <td name = "credit_card_numb">
+            <input
+            type = "number"
+            />
+          </td>
+          <td name = "credit_card_exp_month">
+            <div align="right">
+            <select>
+              <option value = "1">1</option>
+              <option value = "2">2</option>
+              <option value = "3">3</option>
+              <option value = "4">4</option>
+              <option value = "5">5</option>
+              <option value = "6">6</option>
+              <option value = "7">7</option>
+              <option value = "8">8</option>
+              <option value = "9">9</option>
+              <option value = "10">10</option>
+              <option value = "11">11</option>
+              <option value = "12">12</option>
+            </select>
+          </div>
+          </td>
+           <td name = "credit_card_exp_year">
+            <select >
+              <option value = "22">22</option>
+              <option value = "22">22</option>
+              <option value = "24">24</option>
+              <option value = "25">25</option>
+              <option value = "26">26</option>
+              <option value = "27">27</option>
+              <option value = "28">28</option>
+            </select>
+            
+          </td>
+          <td  name = "cost of sale"> $
+            <input 
+            type = "number" step="0.01" 
+            />
+          </td>
+          <td name = "ee_id">
+            <input
+            type = "int"
+            />
+            <td>
+              <button name = "save button">Save</button>  
+            </td>    
+        </tr>
+      </tbody>
+    </table>
+  </fieldset>
+</form>
+<p>
+
+
+</p>
+
+<form action ="/purchases/results" method = "GET">
+  <fieldset>
+    <legend>Search for Purchase</legend>
+    <p></p>
+
+    <p>Input desired search criteria</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Purchase ID</th>
+          <th>Customer ID</th>
+          <th>Purchase Date</th>
+          <th>Credit Card Number</th>
+          <th colspan  = "2">Credit Card Expiration</th>
+          <th>Cost</th>
+          <th>Employee ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr name = "purchase table rows">
+          <td name = "purchase_id">
+            <input
+            type = "int"
+            />
+          </td>
+          <td name = "customer_id">
+            <input
+            type = "int"
+            />
+          </td>
+          <td name = "purchase_date">
+            <input
+            type = "date"
+            />
+          </td>
+          <td name = "credit_card_numb">
+            <input
+            type = "number"
+            />
+          </td>
+          <td name = "credit_card_exp_month">
+            <div align="right">
+            <select>
+              <option value = "1">1</option>
+              <option value = "2">2</option>
+              <option value = "3">3</option>
+              <option value = "4">4</option>
+              <option value = "5">5</option>
+              <option value = "6">6</option>
+              <option value = "7">7</option>
+              <option value = "8">8</option>
+              <option value = "9">9</option>
+              <option value = "10">10</option>
+              <option value = "11">11</option>
+              <option value = "12">12</option>
+            </select>
+          </div>
+          </td>
+           <td name = "credit_card_exp_year">
+            <select >
+              <option value = "22">22</option>
+              <option value = "22">22</option>
+              <option value = "24">24</option>
+              <option value = "25">25</option>
+              <option value = "26">26</option>
+              <option value = "27">27</option>
+              <option value = "28">28</option>
+            </select>
+          </td>
+          <td  name = "cost of sale" >$
+            <input 
+            type = "number" step="0.01" 
+            />
+          </td>
+          <td name = "ee_id">
+            <input
+            type = "int"
+            />
+            <td>
+              <button name = "search button" formaction="/purchases/results/not_found">Search</button> 
+            </td>
+            <td>
+              <button name = "view-al button">View All</button>  
+            </td>      
+        </tr>
+      </tbody>
+    </table>
+  </fieldset>
+</form>
+
+</body>

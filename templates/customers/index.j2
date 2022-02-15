@@ -1,0 +1,110 @@
+<html lang="en" dir="ltr"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- <link href="../stylesheet.css" rel="stylesheet" type="text/css"> -->
+  <title>Customers</title>
+</head>
+
+<body><header>
+  <h1>Three Eight Cycles Customer Records</h1>
+  <nav>
+    <div>
+      <a href="../main.html">Home</a>
+      <a href="../items/index.html">Items</a>
+      <a href="../purchases/index.html">Purchases</a>
+      <a href="../employees/index.html">Employees</a>
+
+    </div>
+  </nav>
+</header>
+
+<br>
+
+      
+    <h2>Add or Search for Customer</h2>
+        <!-- RETRIEVE Customer -->
+    <form action="customers/retrieved" method="GET"> <!--Figure this out-->
+      <fieldset>
+        <legend>Find Customer</legend>
+        <p>Input Customer information</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Customer ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Customer Email</th>
+            <th>Membership Status</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr name="customer table rows">
+            <td label="customerId">
+              <input type="text" id="customerId" name="customerId" value="19202">
+            </td>
+            <td label="customerFirstName">
+              <input type="text" id="customerFirstName" name="customerFirstName" value="Itsan">
+            </td>
+            <td label="customerLastName">
+              <input type="text" id="customerLastName" name="customerLastName" value="Customer">
+            </td>
+            <td label="customerEmail">
+              <input type="text" id="customerEmail" name="customerEmail" value="customer@email.com">
+            </td>
+            <td label="membershipStatus">
+              <input type="text" id="membershipStatus" name="membershipStatus" value="Active">
+            </td>
+            <td label="search" button="">
+              <button formaction= "customers/index.j2" name="search button">Find Customer</button>
+            </td>
+            <td label="view" all>
+              <button name="view all">View All</button>
+            </td>
+          </tr>
+
+          
+        </tbody></table>
+      </fieldset>
+    </form>
+
+    <br>
+
+    <form action="/customers" method="POST"> <!--Figure this out-->
+      <fieldset>
+        <legend>Create Customer</legend>
+        <p>Input Customer information</p>
+      <table>
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Customer Email</th>
+            <th>Membership Status</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr name="customer table rows">
+            <td label="customerFirstName">
+              <input type="text" id="customerFirstName" name="customerFirstName" value="Itsan">
+            </td>
+            <td label="customerLastName">
+              <input type="text" id="customerLastName" name="customerLastName" value="Customer">
+            </td>
+            <td label="customerEmail">
+              <input type="text" id="customerEmail" name="customerEmail" value="customer@email.com">
+            </td>
+            <td label="membershipStatus">
+              <input type="text" id="membershipStatus" name="membershipStatus" value="Active">
+            </td>
+            <td label="Save" button="">
+              <button name="Save button">Save</button>
+            </td>
+          </tr>
+
+          
+        </tbody></table>
+      </fieldset>
+    </form>
+  
+</body></html>
