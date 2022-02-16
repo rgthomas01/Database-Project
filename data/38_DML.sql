@@ -102,4 +102,3 @@ Values ('%s','%s','%s');
 
 /*Delete*/
 DELETE FROM Purchases WHERE purchaseId = '%';
-
