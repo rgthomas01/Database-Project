@@ -1,8 +1,8 @@
 {
 "employees": [
-                {"eeId":"123","eeFirstName":"Isan","eeLastName":"Employee","eeEmail":"iemployee@example.com","eeBday":"12/31/80","position":"Sales Associate"},
-                {"eeId":"456","eeFirstName":"Bob","eeLastName":"Builder","eeEmail":"bbuilder@example.com","eeBday":"1/21/98","position":"Floor Manager"},
-                {"eeId":"789","eeFirstName":"Octavia","eeLastName":"Butler","eeEmail":"bbutler@example.com", "eeBday":"12/21/55","position":"General Manager"}
+                {"eeId":"123","eeFirstName":"Isan","eeLastName":"Employee","eeEmail":"iemployee@example.com","position":"Sales Associate"},
+                {"eeId":"456","eeFirstName":"Bob","eeLastName":"Builder","eeEmail":"bbuilder@example.com","position":"Floor Manager"},
+                {"eeId":"789","eeFirstName":"Octavia","eeLastName":"Butler","eeEmail":"bbutler@example.com","position":"General Manager"}
     ],
 
 "customers": [
