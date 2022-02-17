@@ -28,18 +28,18 @@
             <div class="col-2">
                 <input type="text" class="form-control" id="eeId" name="eeId" value="{{updateRecord['eeId']}}">
             </div>
-            <div class="col-3">
+            <div class="col">
                 <input type="text" class="form-control" id="eeFirstName" name="eeFirstName" value="{{updateRecord['eeFirstName']}}" required>
             </div>
-            <div class="col-3">
+            <div class="col">
                 <input type="text" class="form-control" id="eeLastName" name="eeLastName" value="{{updateRecord['eeLastName']}}" required>
             </div>
         <!-- Otherwise, blank values when called to create -->
         {% else %}
-            <div class="col-3">
+            <div class="col">
                 <input type="text" class="form-control" id="eeFirstName" name="eeFirstName" placeholder="First Name" required>
             </div>
-            <div class="col-3">
+            <div class="col">
                 <input type="text" class="form-control" id="eeLastName" name="eeLastName" placeholder="Last Name" required>
             </div>
         {% endif %}
@@ -171,13 +171,23 @@
         </div>
     </div>
     <div class="form-row">
-        <div class="alert alert-secondary" role="alert" style="max-width: 600px">
-            <b>Note:</b> You will be asked to input items and quantity on the following page. 
+        <div class="alert alert-info" role="alert" style="max-width: 600px">
+            <b>Note:</b> Click "Add Items" to add a line for each item category. Then input Item ID and quantity purchased. Click "Start Over" to clear this form. 
         </div>
     </div>
+    {# add items #}
     <div class="form-row">
-        <button type="submit" class="btn btn-outline-primary">Submit</button>
+        <div class="col-2">
+            <button type="button" class="btn btn-outline-primary" id="filldetails" onclick="addFields()" style:"min-width: 200px">Add items</a>
+        </div>
+        <div class="col-2">
+            {# TODO: ideally, this should clear the added items, not redirect #}
+            <a href="/{{dbEntity}}" class="btn btn-outline-danger" id="addStartOver" style:"min-width: 200px">Start Over</a>
+        </div>
     </div>
+    <div id="itemsContainer" class="form-group" style="padding: 10px">
+    </div>
+        
     <!-- Otherwise, blank values when called to create -->
     {% else %}
         <div class="form-row">
@@ -207,13 +217,23 @@
             </div>
         </div>
         <div class="form-row">
-            <div class="alert alert-secondary" role="alert" style="max-width: 600px">
-                <b>Note:</b> You will be asked to input items and quantity on the following page. 
+            <div class="alert alert-info" role="alert" style="max-width: 600px">
+                <b>Note:</b> Click "Add Items" to add a line for each item category. Then input Item ID and quantity purchased. Click "Start Over" to clear this form. 
             </div>
         </div>
+
+        {# add items #}
         <div class="form-row">
-            <button type="submit" class="btn btn-outline-primary">Submit</button>
+            <div class="col-2">
+                <button type="button" class="btn btn-outline-primary" id="filldetails" onclick="addFields()" style:"min-width: 200px">Add items</a>
+            </div>
+            <div class="col-2">
+                <a href="/{{dbEntity}}/{{operation}}" class="btn btn-outline-danger" id="addStartOver" style:"min-width: 200px">Start Over</a>
+            </div>
         </div>
+        <div id="itemsContainer">
+        </div>
+
     {% endif %}
 
 <!-- below tag closes form referenced in createUpdateHeading -->

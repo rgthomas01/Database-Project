@@ -1,40 +1,28 @@
 from flask import Flask, render_template, json, redirect, request #added request
 # from flask_mysqldb import MySQL
 import os
-#import database.db_connector as db
-
-
-# ------------------------------DECLARE APP-----------------------
 
 app = Flask(__name__)
 
 # ------------------------------SQL CONNECTION------------------------------
 
 # app.config['MYSQL_HOST'] = 'classmysql.engr.oregonstate.edu'
-# app.config['MYSQL_USER'] = 'cs340_thomrach'
-# app.config['MYSQL_PASSWORD'] = '9244' #last 4 of onid
-# app.config['MYSQL_DB'] = 'cs340_thomrach'
+# app.config['MYSQL_USER'] = 'cs340_bushjam'
+# app.config['MYSQL_PASSWORD'] = '####' #last 4 of onid
+# app.config['MYSQL_DB'] = 'cs340_bushjam'
 # app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 
 # mysql = MySQL(app)
 
-# ------------------------------LOAD DATA------------------------------
+# ------------------------------DATA------------------------------
 
 with open('data/mockData.json', 'r+') as infile:
     mockData = json.load(infile)
 
 
-# ------------------------------MAIN------------------------------
-# NOTE: From guide / may need some of this later
-# @app.route('/')
-# def root():
-#     query = "SELECT * FROM diagnostic;"
-#     cur = mysql.connection.cursor()
-#     cur.execute(query)
-#     results = cur.fetchall()
 
-#     return results[0]
+# ------------------------------MAIN------------------------------
 
 @app.route('/',methods=["GET"])
 def main():
@@ -265,11 +253,3 @@ def itemsDelete():
     data = mockData['items']
 
     return delete(dbEntity, data)
-
-    
-
-# # Listener
-# if __name__ == "__main__":
-
-#     #Start the app on port 3000, it will be different once hosted
-#     app.run(port=3838, debug=True)
