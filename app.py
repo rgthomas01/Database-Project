@@ -148,8 +148,14 @@ def update(dbEntity, data):
             if i[entityId] == idValue:
                 updateRecord = i
 
+        # Pull existing items for purchases update
+        if dbEntity == "purchases":
+            existingItems = mockData['purchasesItems']
+        else: 
+            existingItems = []
+
         # Render the template, pre-populated with subject's existing information from db
-        return render_template("createUpdate.j2", dbEntity=dbEntity, data=data, operation="update", updateRecord=updateRecord, updated=False)
+        return render_template("createUpdate.j2", dbEntity=dbEntity, data=data, operation="update", updateRecord=updateRecord, existingItems=existingItems, updated=False)
 
     # Submit new information to affect update 
     if request.method == "POST":

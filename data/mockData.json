@@ -1,36 +1,43 @@
 {
-"employees": [
-                {"eeId":"123","eeFirstName":"Isan","eeLastName":"Employee","eeEmail":"iemployee@example.com","position":"Sales Associate"},
-                {"eeId":"456","eeFirstName":"Bob","eeLastName":"Builder","eeEmail":"bbuilder@example.com","position":"Floor Manager"},
-                {"eeId":"789","eeFirstName":"Octavia","eeLastName":"Butler","eeEmail":"bbutler@example.com","position":"General Manager"}
-    ],
-
-"customers": [
-                {"customerId":"123","customerFirstName":"Hector","customerLastName":"Martinez","customerEmail":"hm@example.com","memberStatus":"Yes"},
-                {"customerId":"456","customerFirstName":"Jillian","customerLastName":"Customer","customerEmail":"jcustomer@example.com","memberStatus":"Yes"},
-                {"customerId":"789","customerFirstName":"Kilgore","customerLastName":"Trout","customerEmail":"ktrout@example.com", "memberStatus":"No"}
-    ],
-
-"purchases": [
-                {   "purchaseId":"16552",
-                    "customerId":"456",
-                    "purchaseDate":"2019-01-08",
-                    "creditCardNumb":"1234-5678-9012-3456",
-                    "creditCardExp":"12/20",
-                    "costOfSale":"44.99",
-                    "eeId":"123"
-                }
-    ],
-
-"items": [
-                {   "itemId":"757273",
-                    "itemName":"Full Suspension Mountain Bike",
-                    "itemPrice":"1599.99",
-                    "itemDescription":"Goes up the mountains; goes down the mountains.",
-                    "itemType": "Mountain Bike",
-                    "inventoryOnHand": "2"
-
-                }
-    ]
-
-}
+    "employees": [
+                    {"eeId":"123","eeFirstName":"Isan","eeLastName":"Employee","eeEmail":"iemployee@example.com","eeBday":"12/31/80","position":"Sales Associate"},
+                    {"eeId":"456","eeFirstName":"Bob","eeLastName":"Builder","eeEmail":"bbuilder@example.com","eeBday":"1/21/98","position":"Floor Manager"},
+                    {"eeId":"789","eeFirstName":"Octavia","eeLastName":"Butler","eeEmail":"bbutler@example.com", "eeBday":"12/21/55","position":"General Manager"}
+        ],
+    
+    "customers": [
+                    {"customerId":"123","customerFirstName":"Hector","customerLastName":"Martinez","customerEmail":"hm@example.com","memberStatus":"Yes"},
+                    {"customerId":"456","customerFirstName":"Jillian","customerLastName":"Customer","customerEmail":"jcustomer@example.com","memberStatus":"Yes"},
+                    {"customerId":"789","customerFirstName":"Kilgore","customerLastName":"Trout","customerEmail":"ktrout@example.com", "memberStatus":"No"}
+        ],
+    
+    "purchases": [
+                    {   "purchaseId":"16552",
+                        "customerId":"456",
+                        "purchaseDate":"2019-01-08",
+                        "creditCardNumb":"1234-5678-9012-3456",
+                        "creditCardExp":"12/20",
+                        "costOfSale":"44.99",
+                        "eeId":"123"
+                    }
+        ],
+    
+    "items": [
+                    {   "itemId":"757273",
+                        "itemName":"Full Suspension Mountain Bike",
+                        "itemPrice":"1599.99",
+                        "itemDescription":"Goes up the mountains; goes down the mountains.",
+                        "itemType": "Mountain Bike",
+                        "inventoryOnHand": "2"
+    
+                    }
+        ],
+    "purchasesItems" : [ 
+                    {   "itemId": "9839832","itemQuantity": "4"},
+                    {   "itemId": "3283209","itemQuantity": "2"},
+                    {   "itemId": "1893292","itemQuantity": "1"}
+    
+    
+        ]
+    
+    }

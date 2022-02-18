@@ -5,7 +5,7 @@
     {{ super() }}
 {% endblock %}
 
-<!-- 1. Set Heading for all create/update pages -->
+<!-- 1.1 Set Heading for all create/update pages -->
 <!-------------------------------------------------->
 {% set createUpdateHeading %}
 {% if operation == "create" %}
@@ -17,6 +17,34 @@
     <p>Please enter information below to update existing {{dbEntity[:-1]}}.</p>
     <form action="/{{dbEntity}}/update" method="POST">   
 {% endif %}
+{% endset %}
+
+<!-- 1.2 Set addEditItemsContainer for purchases -->
+<!-------------------------------------------------->
+{% set addEditItemsContainer %}
+    {# https://stackoverflow.com/questions/3842614/how-do-i-call-a-javascript-function-on-page-load #}
+    {% if operation == "update" %}
+        <script>
+        function loadExistingItems(){addFields({{existingItems}})};
+        window.onload=loadExistingItems;
+        </script>
+    {% endif %}
+    <div class="form-row">
+        <!--
+        <div id="editExistingDiv" class="col-3">
+            <button type="button" class="btn btn-outline-primary" id="editExisting" onclick="addFields({{existingItems}})" style:"min-width: 200px">Edit Existing</a>
+        </div>
+        -->
+        <div class="col-3">
+            <button type="button" class="btn btn-outline-primary" id="addItems" onclick="addFields()" style:"min-width: 200px">Add items</a>
+        </div>
+        <div class="col-3">
+            <a href="" onClick="window.location.reload(true)" class="btn btn-outline-danger" id="addStartOver" style:"min-width: 200px">Start Over</a>
+        </div>
+    </div>
+    <div id="itemsContainer" class="form-group" style="padding: 10px">
+    </div>
+
 {% endset %}
 
 <!-- 2.1 create / update employee forms --!> 
@@ -172,21 +200,11 @@
     </div>
     <div class="form-row">
         <div class="alert alert-info" role="alert" style="max-width: 600px">
-            <b>Note:</b> Click "Add Items" to add a line for each item category. Then input Item ID and quantity purchased. Click "Start Over" to clear this form. 
+            <b>Note:</b> Click "Add Items" to add new itmes. Enter Item ID and Item Quantity. Entering an Item Quantity of "0" for an existing item will delete it. Click "Start Over" to clear your edits. 
         </div>
     </div>
-    {# add items #}
-    <div class="form-row">
-        <div class="col-2">
-            <button type="button" class="btn btn-outline-primary" id="filldetails" onclick="addFields()" style:"min-width: 200px">Add items</a>
-        </div>
-        <div class="col-2">
-            {# TODO: ideally, this should clear the added items, not redirect #}
-            <a href="/{{dbEntity}}" class="btn btn-outline-danger" id="addStartOver" style:"min-width: 200px">Start Over</a>
-        </div>
-    </div>
-    <div id="itemsContainer" class="form-group" style="padding: 10px">
-    </div>
+    {# edit/add items #}
+    {{ addEditItemsContainer }}
         
     <!-- Otherwise, blank values when called to create -->
     {% else %}
@@ -218,21 +236,11 @@
         </div>
         <div class="form-row">
             <div class="alert alert-info" role="alert" style="max-width: 600px">
-                <b>Note:</b> Click "Add Items" to add a line for each item category. Then input Item ID and quantity purchased. Click "Start Over" to clear this form. 
+                <b>Note:</b> Click "Add Items" to add a line for each new item category. Then input Item ID and quantity purchased. Click "Start Over" to clear this form. 
             </div>
         </div>
-
         {# add items #}
-        <div class="form-row">
-            <div class="col-2">
-                <button type="button" class="btn btn-outline-primary" id="filldetails" onclick="addFields()" style:"min-width: 200px">Add items</a>
-            </div>
-            <div class="col-2">
-                <a href="/{{dbEntity}}/{{operation}}" class="btn btn-outline-danger" id="addStartOver" style:"min-width: 200px">Start Over</a>
-            </div>
-        </div>
-        <div id="itemsContainer">
-        </div>
+        {{ addEditItemsContainer }}
 
     {% endif %}
 
