@@ -1,6 +1,8 @@
 from flask import Flask, render_template, json, redirect, request #added request
-# from flask_mysqldb import MySQL
+from flask_mysqldb import MySQL
+from flask import request
 import os
+import database.db_connector as db
 
 app = Flask(__name__)
 
@@ -13,7 +15,8 @@ app = Flask(__name__)
 # app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 
-# mysql = MySQL(app)
+db_connection = db.connect_to_database()
+mysql = MySQL(app)
 
 # ------------------------------DATA------------------------------
 
@@ -54,35 +57,47 @@ def retrieve(dbEntity, data):
 def employeeRetrieve():
 
     dbEntity = "employees"
-    data = mockData['employees']
 
-    return retrieve(dbEntity, data)
+    if request.method == "GET":
+        query = "Select * FROM Employees;"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = (cursor.fetchall())
+        return retrieve(dbEntity, data= results)
 
 
 @app.route('/customers',methods=["GET", "POST"])
 def customerRetrieve():
-
     dbEntity = "customers"
-    data = mockData['customers']
 
-    return retrieve(dbEntity, data)
+    if request.method == "GET":
+        query = "Select * FROM Customers;"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = (cursor.fetchall())
+        return retrieve(dbEntity, data=results)
+    
 
 
 @app.route('/purchases',methods=["GET", "POST"])
 def purchasesRetrieve():
 
     dbEntity = "purchases"
-    data = mockData['purchases']
 
-    return retrieve(dbEntity, data)
+    if request.method == "GET":
+        query = "Select * FROM Purchases;"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = (cursor.fetchall())
+        return retrieve(dbEntity, data=results)
 
 @app.route('/items',methods=["GET", "POST"])
 def itemsRetrieve():
 
     dbEntity = "items"
-    data = mockData['items']
 
-    return retrieve(dbEntity, data)
+    if request.method == "GET":
+        query = "Select * FROM Items;"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        results = (cursor.fetchall())
+        return retrieve(dbEntity, data= results)
 
 
 # ------------------------------CREATE------------------------------
@@ -259,3 +274,8 @@ def itemsDelete():
     data = mockData['items']
 
     return delete(dbEntity, data)
+
+
+if __name__ == "__main__":
+    port = int(os.environ.get('PORT', 9113))
+    app.run(port=port, debug=True)

@@ -7,14 +7,21 @@ CREATE TABLE `Customers` (
   PRIMARY KEY (`customerID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
+INSERT INTO `Customers` (`customerId`, `customerFirstName`, `customerLastName`, `customerEmail`, `membershipStatus`) 
+VALUES (NULL, 'John', 'Smith ', 'johnsmith@aol.com', '1');
+
+
 CREATE TABLE `Items` (
   `itemId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `itemName` varchar(35) NOT NULL,
-  `itemPrice` decimal(2) NOT NULL,
+  `itemPrice` decimal(6,2) NOT NULL,
   `itemDescription` varchar(254),
   `inventoryOnHand` varchar(15) NOT NULL,
   PRIMARY KEY (`itemId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
+
+INSERT INTO `Items` (`itemId`, `itemName`, `itemPrice`, `itemDescription`, `inventoryOnHand`) 
+VALUES (NULL, 'Full Suspension Mountain Bike', '1599.99', 'goes up mountain and down', '21');
 
 CREATE TABLE `Employees` (
   `eeId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
@@ -26,19 +33,25 @@ CREATE TABLE `Employees` (
   PRIMARY KEY (`eeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
+INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`, `eeEmail`, `eeBday`, `position`) 
+VALUES (NULL, 'Paul', 'Bunion', 'bigpaul@bunion.net', '1908-01-01', 'Sales Clerk');
+
 CREATE TABLE `Purchases` (
   `purchaseId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `customerId` int(11) NOT NULL,
   `purchaseDate`date NOT NULL,
   `creditCardNumb` varchar(19) NOT NULL,
   `creditCardExp` varchar(4),
-  `costOfSale` decimal(2),
+  `costOfSale` decimal(6,2),
   `eeId` int(11),
   FOREIGN KEY (`customerId`)
   REFERENCES Customers (`customerId`),
   FOREIGN KEY (`eeId`)
   REFERENCES Employees (`eeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
+
+INSERT INTO `Purchases` (`purchaseId`, `customerId`, `purchaseDate`, `creditCardNumb`, `creditCardExp`, `costOfSale`, `eeId`) 
+VALUES (NULL, '28', '2022-02-18', '1111111111111111', '1111', '1599.99', '28');
 
 
 CREATE TABLE `PurchaseItems` (
@@ -50,3 +63,6 @@ CREATE TABLE `PurchaseItems` (
   FOREIGN KEY (`itemId`)
   REFERENCES Items (`itemId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
+
+INSERT INTO `PurchaseItems` (`purchaseId`, `itemId`, `itemQuantity`)
+ VALUES ('28', '28', '1');
