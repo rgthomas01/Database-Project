@@ -106,7 +106,7 @@ def itemsRetrieve():
 
 def create(dbEntity):
 
-    # Blank form to create 
+   # Blank form to create 
     if request.method == "GET":
          return render_template("createUpdate.j2", dbEntity=dbEntity, operation="create", created=False)
 
@@ -117,10 +117,19 @@ def create(dbEntity):
     
         return render_template("createUpdate.j2", dbEntity=dbEntity, data=dict(request.form.items()), operation="create", created=True) 
 
+
 @app.route('/employees/create',methods=["GET", "POST"])
 def employeesCreate():
 
     dbEntity = "employees"
+    if request.method == "POST":
+        eeFirstName = request.form["eeFirstName"]
+        eeLastName= request.form["eeLastName"]
+        eePosition = request.form["eePosition"]
+
+        query = "INSERT INTO Employees (eeId, eeFirstName, eeLastName,eePosition) VALUES (NULL, %s,%s,%s);"
+        cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (eeFirstName,eeLastName, eePosition, ))       
+        results = (cursor.fetchall())
 
     return create(dbEntity)
 
@@ -128,14 +137,58 @@ def employeesCreate():
 def customersCreate():
 
     dbEntity = "customers"
+    if request.method == "POST":
+        customerFirstName = request.form["customerFirstName"]
+        customerLastName= request.form["customerLastName"]
+        customerEmail = request.form["customerEmail"]
+        membershipStatus = request.form["membershipStatus"]
+
+        query = "INSERT INTO Customers (customerId, customerFirstName, customerLastName, customerEmail, membershipStatus) VALUES (NULL, %s,%s,%s,%s);"
+        cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (customerFirstName, customerLastName, customerEmail, membershipStatus, ))       
+        results = (cursor.fetchall())
 
     return create(dbEntity)
+
 
 
 @app.route('/purchases/create',methods=["GET", "POST"])
 def purchasesCreate():
 
     dbEntity = "purchases"
+    if request.method == "POST":
+        purchaseDate = request.form["purchaseDate"]
+        customerId= request.form["customerId"]
+        eeId = request.form["eeId"]
+        creditCardNumb = request.form["creditCardNumb"]
+        creditCardExp = request.form["creditCardExp"]
+        costOfSale = request.form["costOfSale"]
+        
+        #TODO needs looping to catch all itemId's and itemQuantitys
+        itemId = request.form["itemId1"]
+        itemQuantity = request.form["itemQuantity1"]
+
+
+        query = "INSERT INTO Purchases (purchaseId, customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale, eeId) VALUES (NULL, %s,%s,%s,%s,%s,%s);"
+        cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale    , eeId, ))       
+        results = (cursor.fetchall())
+
+      
+       
+        
+        #take purchaseId from purchase record created to use in adding PurchaseItems
+        cursor.execute('select LAST_INSERT_ID()')
+        purchaseIdtuple = (cursor.fetchall())
+        purchaseId = purchaseIdtuple[0].get('LAST_INSERT_ID()')
+        
+       #TODOS ->
+        #select last_insert may not be way to go here, need to look at functionality may be better to get purchaseId through a select.
+        #https://dba.stackexchange.com/questions/81604/how-to-insert-values-in-junction-table-for-many-to-many-relationships
+       
+
+        query = "INSERT INTO PurchaseItems (purchaseId, itemId, itemQuantity) VALUES (%s,%s,%s);"
+        cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (purchaseId, itemId, itemQuantity, ))       
+        results = (cursor.fetchall())
+
 
     return create(dbEntity)
 
@@ -144,6 +197,17 @@ def purchasesCreate():
 def itemsCreate():
 
     dbEntity = "items"
+    if request.method == "POST":
+        itemName = request.form["itemName"]
+        itemPrice= request.form["itemPrice"]
+        itemDescription = request.form["itemDescription"]
+        itemType = request.form["itemType"]
+        inventoryOnHand = request.form["inventoryOnHand"]
+
+
+        query = "INSERT INTO Items (itemId, itemName, itemPrice, itemDescription, itemType, inventoryOnHand) VALUES (NULL,%s,%s,%s,%s,%s);"
+        cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (itemName, itemPrice, itemDescription, itemType, inventoryOnHand, ))       
+        results = (cursor.fetchall())
 
     return create(dbEntity)
 
@@ -195,6 +259,7 @@ def customersUpdate():
     data = mockData['customers']
 
     return update(dbEntity, data)
+    
 
 
 @app.route('/purchases/update',methods=["GET", "POST"])

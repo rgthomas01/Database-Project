@@ -16,6 +16,7 @@ CREATE TABLE `Items` (
   `itemName` varchar(35) NOT NULL,
   `itemPrice` decimal(6,2) NOT NULL,
   `itemDescription` varchar(254),
+  `itemType` varchar(50),
   `inventoryOnHand` varchar(15) NOT NULL,
   PRIMARY KEY (`itemId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
@@ -27,14 +28,12 @@ CREATE TABLE `Employees` (
   `eeId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `eeFirstName` varchar(35) NOT NULL,
   `eeLastName` varchar(35) NOT NULL,
-  `eeEmail` varchar(254),
-  `eeBday` date, 
-  `position` varchar(35) NOT NULL,
+  `eePosition` varchar(35) NOT NULL,
   PRIMARY KEY (`eeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
-INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`, `eeEmail`, `eeBday`, `position`) 
-VALUES (NULL, 'Paul', 'Bunion', 'bigpaul@bunion.net', '1908-01-01', 'Sales Clerk');
+INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`) 
+VALUES (NULL, 'Paul', 'Bunion', 'floorManager');
 
 CREATE TABLE `Purchases` (
   `purchaseId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,

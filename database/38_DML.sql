@@ -13,8 +13,8 @@ SELECT customerId, customerFirstName, customerLastName, customerEmail, membershi
 
 /*Insert*/
 /*if blank pass Null*/
-INSERT INTO Customers (customerFirstName, customerLastName, customerEmail, membershipStatus)
-Values ('%s','%s','%s','%s');
+INSERT INTO Customers (customerId, customerFirstName, customerLastName, customerEmail, membershipStatus)
+Values (NULL, '%s','%s','%s','%s');
 
 
 /*Update*/  
@@ -39,8 +39,8 @@ SELECT eeId, eeFirstName, eeLastName from Employees Where eeId = '%s' OR ee='%s'
 
 /*Insert*/
 /*if blank value Null*/
-INSERT INTO Employees (eeFirstName, eeLastName,eePosition)
-Values ('%s','%s','%s');
+INSERT INTO Employees (eeId, eeFirstName, eeLastName,eePosition)
+Values (NULL, '%s','%s','%s');
 
 
 /*Update*/  
@@ -67,7 +67,7 @@ SELECT itemId, itemName, itemPrice, itemType from Items Where itemId = '%s' OR i
 /*Insert*/
 /*if blank pass Null*/
 INSERT INTO Items (itemId, itemName, itemPrice, itemDescription, itemType, inventoryOnHand)
-Values ('%s','%s','%s','%s','%s','%s');
+Values (NULL,'%s','%s','%s','%s','%s');
 
 
 /*Update*/  
