@@ -143,9 +143,17 @@ def customersCreate():
         customerEmail = request.form["customerEmail"]
         membershipStatus = request.form["membershipStatus"]
 
-        query = "INSERT INTO Customers (customerId, customerFirstName, customerLastName, customerEmail, membershipStatus) VALUES (NULL, %s,%s,%s,%s);"
-        cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (customerFirstName, customerLastName, customerEmail, membershipStatus, ))       
-        results = (cursor.fetchall())
+        #if customerEmail is null 
+        if customerEmail == "":
+            query = "INSERT INTO Customers (customerId, customerFirstName, customerLastName, membershipStatus) VALUES (NULL, %s,%s,%s);"
+            cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (customerFirstName, customerLastName, membershipStatus, ))       
+            results = (cursor.fetchall())
+        
+        #if all values are provided 
+        else:
+            query = "INSERT INTO Customers (customerId, customerFirstName, customerLastName, customerEmail, membershipStatus) VALUES (NULL, %s,%s,%s,%s);"
+            cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (customerFirstName, customerLastName, customerEmail, membershipStatus, ))       
+            results = (cursor.fetchall())
 
     return create(dbEntity)
 
@@ -167,10 +175,18 @@ def purchasesCreate():
         itemId = request.form["itemId1"]
         itemQuantity = request.form["itemQuantity1"]
 
+        #if self checkout was used. EmployeeId is NULL
+        if eeId =="":
+            query = "INSERT INTO Purchases (purchaseId, customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale) VALUES (NULL, %s,%s,%s,%s,%s);"
+            cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale ))       
+            results = (cursor.fetchall())
 
-        query = "INSERT INTO Purchases (purchaseId, customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale, eeId) VALUES (NULL, %s,%s,%s,%s,%s,%s);"
-        cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale    , eeId, ))       
-        results = (cursor.fetchall())
+        
+
+        else:    
+            query = "INSERT INTO Purchases (purchaseId, customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale, eeId) VALUES (NULL, %s,%s,%s,%s,%s,%s);"
+            cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale    , eeId, ))       
+            results = (cursor.fetchall())
 
       
        
