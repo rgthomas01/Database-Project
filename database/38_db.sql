@@ -1,3 +1,6 @@
+/* 38 Cycles DB File */
+
+
 CREATE TABLE `Customers` (
   `customerId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
   `customerFirstName` varchar(35) NOT NULL,

@@ -195,6 +195,7 @@ def purchasesCreate():
 
 @app.route('/items/create',methods=["GET", "POST"])
 def itemsCreate():
+    
 
     dbEntity = "items"
     if request.method == "POST":
