@@ -101,7 +101,7 @@ INSERT INTO Purchases (purchaseId, customerId, purchaseDate, creditCardNumb, cre
 Values (NULL, '28', '%s','%s','%s','%s','28');
 
 INSERT INTO PurchaseItems (purchaseId, itemId, itemQuantity)
-Values ('%s','%s','%s');
+Values ('28','%s','%s');
 
 /*Delete*/
 DELETE FROM Purchases WHERE purchaseId = '%';
