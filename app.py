@@ -359,5 +359,5 @@ def itemsDelete():
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 9113))
-    app.run(port=port, debug=True)
+    port = int(os.environ.get('PORT', 3838))
+    app.run(host='0.0.0.0',port=port, debug=True)

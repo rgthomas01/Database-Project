@@ -30,6 +30,9 @@ def execute_query(db_connection = None, query = None, query_params = ()):
 
     '''
 
+    #Testing keeping the connection alive
+    connect_to_database()
+
     if db_connection is None:
         print("No connection to the database found! Have you called connect_to_database() first?")
         return None
