@@ -98,7 +98,8 @@ SELECT purchaseId, customerId, purchaseDate, creditCardNumb, creditCardExp, cost
 /*Insert*/
 /*if blank pass Null*/
 INSERT INTO Purchases (purchaseId, customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale, eeId)
-Values (NULL, '%s','%s','%s','%s','%s','%s');
+Values (NULL, '28','%s','%s','%s','%s','28');
+/* 28 is used for both customerId and eeId as db is trying to validate against FK's so they need to be  values in Db to not fail FK check */
 
 INSERT INTO PurchaseItems (purchaseId, itemId, itemQuantity)
 Values ('%s','%s','%s');
