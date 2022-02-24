@@ -98,7 +98,7 @@ SELECT purchaseId, customerId, purchaseDate, creditCardNumb, creditCardExp, cost
 /*Insert*/
 /*if blank pass Null*/
 INSERT INTO Purchases (purchaseId, customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale, eeId)
-Values (NULL, '%s','%s','%s','%s','%s','%s');
+Values (NULL, '%s', 28,'%s','%s','%s','%s');
 
 INSERT INTO PurchaseItems (purchaseId, itemId, itemQuantity)
 Values ('%s','%s','%s');
