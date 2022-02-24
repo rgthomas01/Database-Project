@@ -38,7 +38,7 @@ Select * FROM Employees;
 /*likely if statement structure for selects and default passed values if fields are blank
 If ID = Null replace with " " else id == id*  --based on stack post,
 */
-SELECT eeId, eeFirstName, eeLastName from Employees Where eeId = '%s' OR ee='%s' OR eeLastName='%s';
+SELECT eeId, eeFirstName, eeLastName from Employees Where eeId = '%s' OR eeFirstName='%s' OR eeLastName='%s';
 
 /*Insert*/
 /*if blank value Null*/
@@ -49,7 +49,7 @@ Values (NULL, '%s','%s','%s');
 /*Update*/  
 /*grab item passed to update by id */
 SELECT * FROM Employees WHERE eeId = '%s';
-UPDATE Employees SET eeFirstName = '%s', eeLastName = '%s', eeEmail = '%s', eeBday = '%s' WHERE eeId ='%s';
+UPDATE Employees SET eeFirstName = '%s', eeLastName = '%s', eePosition = '%s' WHERE eeId ='%s';
 
 /*Delete*/
 DELETE FROM Employees WHERE eeId = '%';
