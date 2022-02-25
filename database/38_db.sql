@@ -1,5 +1,10 @@
 /* 38 Cycles DB File */
 
+DROP TABLE IF EXISTS `PurchaseItem`s;
+DROP TABLE IF EXISTS `Purchases`;
+DROP TABLE IF EXISTS `Customers`;
+DROP TABLE IF EXISTS `Employees`;
+DROP TABLE IF EXISTS `Items`;
 
 CREATE TABLE `Customers` (
   `customerId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
