@@ -307,10 +307,15 @@ def delete(dbEntity,data):
         entityId = deleteRecord[0][0]
         idValue = deleteRecord[0][1]
 
+        query= "SELECT * FROM " + dbEntity.title() + " WHERE " + entityId+ " = %s" 
+        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(idValue, ))       
+        deleteRecord = (cursor.fetchall())
+        
         # Locate the subject in the db by id, assign subject's information (dict()) to deleteRecord
-        for i in data:
-            if i[entityId] == idValue:
-                deleteRecord = i
+        #for i in data:
+         #   if i[entityId] == idValue:
+         #       deleteRecord = i
+         #       print(deleteRecord, "TEST")
 
         # Render the template, pre-populated with subject's existing information from db
         return render_template("delete.j2", dbEntity=dbEntity, data=data, operation="delete", deleteRecord=deleteRecord, deleted=False)
@@ -326,7 +331,12 @@ def delete(dbEntity,data):
 def employeesDelete():
 
     dbEntity = "employees"
-    data = mockData['employees']
+    eeId = request.args.get("eeId")
+    
+
+    
+
+    #data = mockData['employees']
 
     return delete(dbEntity, data)
 
