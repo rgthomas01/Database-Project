@@ -36,7 +36,7 @@ def main():
 # ------------------------------RETRIEVE------------------------------
 
 def retrieve(dbEntity, data):
-    # RETRIEVE - landing page / retrieve results / create new dbEntity
+    # RETRIEVE - landing page / retrieve results 
     if request.method == "GET": 
 
         # Landing page for search - take non-query URL request to /<dbEntity>
@@ -47,12 +47,6 @@ def retrieve(dbEntity, data):
         elif len(request.args) > 0:
             return render_template("retrieve.j2", dbEntity=dbEntity, search=True, created=False, data=data)
     
-    # NOTE: Was originally part of this endpoint, but is now under <dbEntity>/create
-    # # CREATE employee - submitted form to create new <dbEntity>
-    # if request.method == "POST": 
-
-    #     # Pass the request.form dict through 
-    #     return render_template("retrieve.j2", dbEntity=dbEntity, search=False, created=True, data=request.form)
 
 @app.route('/employees',methods=["GET", "POST"])
 def employeeRetrieve():
@@ -103,20 +97,24 @@ def itemsRetrieve():
 
 # ------------------------------CREATE------------------------------
 
-# TODO - PURCHASES STILL NEEDS PAGE 2 FOR ITEMS OR ADDITIONAL FIELDS IN THE TEMPLATE
+def create(dbEntity, formPrefillData=None):
+    """ Create and confirm new entry in database table.  
 
-def create(dbEntity):
+    Keyword arguments: 
+        dbEntity -- corresponds to table in the databae, e.g., Employees
+        formPrefill -- to pre-populate UI form with existing database values, e.g., eeIds, customerIds
+    """
 
    # Blank form to create 
     if request.method == "GET":
-         return render_template("createUpdate.j2", dbEntity=dbEntity, operation="create", created=False)
+         return render_template("createUpdate.j2", dbEntity=dbEntity, formPrefillData=formPrefillData, operation="create", created=False)
 
     # Submit created dbEntity
     elif request.method == "POST":
         # The request.form object a Werkzeug dict, can be accessed like a dict with .keys(), .items(), .values(): 
         # See: https://tedboy.github.io/flask/generated/generated/werkzeug.MultiDict.listvalues.html#werkzeug.MultiDict.listvalues
     
-        return render_template("createUpdate.j2", dbEntity=dbEntity, data=dict(request.form.items()), operation="create", created=True) 
+        return render_template("createUpdate.j2", dbEntity=dbEntity, formPrefillData=formPrefillData, data=dict(request.form.items()), operation="create", created=True) 
 
 
 @app.route('/employees/create',methods=["GET", "POST"])
@@ -164,6 +162,22 @@ def customersCreate():
 def purchasesCreate():
 
     dbEntity = "purchases"
+
+    # Get eeId and customerId data to populate formPrefillData
+    if request.method == "GET":
+        formPrefillData = {'eeIds':[],'customerIds':[]}
+        # Get eeId values 
+        query = "SELECT eeId FROM Employees;"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        formPrefillData['eeIds'] = cursor.fetchall()
+        # Get customerId values 
+        query = "SELECT customerId FROM Customers;"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        formPrefillData['customerIds'] = cursor.fetchall()
+
+        return create(dbEntity, formPrefillData)
+
+
     if request.method == "POST":
         purchaseDate = request.form["purchaseDate"]
         customerId= request.form["customerId"]
@@ -182,15 +196,10 @@ def purchasesCreate():
             cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale ))       
             results = (cursor.fetchall())
 
-        
-
         else:    
             query = "INSERT INTO Purchases (purchaseId, customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale, eeId) VALUES (NULL, %s,%s,%s,%s,%s,%s);"
             cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale    , eeId, ))       
             results = (cursor.fetchall())
-
-      
-       
         
         #take purchaseId from purchase record created to use in adding PurchaseItems
         cursor.execute('select LAST_INSERT_ID()')
@@ -201,13 +210,11 @@ def purchasesCreate():
         #select last_insert may not be way to go here, need to look at functionality may be better to get purchaseId through a select.
         #https://dba.stackexchange.com/questions/81604/how-to-insert-values-in-junction-table-for-many-to-many-relationships
        
-
         query = "INSERT INTO PurchaseItems (purchaseId, itemId, itemQuantity) VALUES (%s,%s,%s);"
         cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (purchaseId, itemId, itemQuantity, ))       
         results = (cursor.fetchall())
 
-
-    return create(dbEntity)
+        return create(dbEntity)
 
 
 @app.route('/items/create',methods=["GET", "POST"])
@@ -391,4 +398,4 @@ def itemsDelete():
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 3838))
-    app.run(host='0.0.0.0',port=port, debug=True)
+    app.run(host='localhost.',port=port, debug=True)

@@ -115,9 +115,9 @@
         <div class="col-5">
         <select class="custom-select" name="membershipStatus" id="membershipStatus" required>
             <option value="">Is customer a member?</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-            </select> 
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select> 
         </div>
     </div>
     <div class="form-row">
@@ -140,8 +140,8 @@
         <div class="col-5">
         <select class="custom-select" name="membershipStatus" id="membershipStatus" required>
             <option value="">Is customer a member?</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
             </select> 
         </div>
     </div>
@@ -212,11 +212,24 @@
             </div>
         </div>
         <div class="form-row">
-            <div class="col-3">
-                <input type="text" class="form-control" id="customerId" name="customerId" placeholder="Customer ID" required>
+            <div class="col-4">
+                <select class="form-control" id="customerId" name="customerId" value="customerId" required>
+                    <option value="" disabled selected>Select Customer ID</option>
+                    {% for i in formPrefillData['customerIds'] %} 
+                        <option> {{i['customerId']}} </option>
+                    {% endfor %}
+                </select>   
+                <small id="customerIdHelpBlock" class="form-text text-muted">
+                Click <a href="/customers/create">here</a> to create new Customer.
+                </small>
             </div>
-            <div class="col-3">
-                <input type="text" class="form-control" id="eeId" name="eeId" placeholder="Employee ID">
+            <div class="col-4">
+                <select class="form-control" id="eeId" name="eeId" value="eeId" required>
+                    <option value="" disabled selected>Select Employee ID</option>
+                    {% for i in formPrefillData['eeIds'] %} 
+                        <option> {{i['eeId']}} </option>
+                    {% endfor %}
+                </select>   
             </div>
         </div>
         <div class="form-row">
