@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 from flask import request
 import os
 import database.db_connector as db
+import json
 
 app = Flask(__name__)
 
@@ -303,7 +304,7 @@ def delete(dbEntity,data):
         
     if request.method == "GET":
         # Parse incoming request to get id attribute name (e.g., 'eeId', 'purchaseId') and its value
-        deleteRecord = [i for i in request.args.items()]
+
         entityId = deleteRecord[0][0]
         idValue = deleteRecord[0][1]
 
@@ -311,34 +312,54 @@ def delete(dbEntity,data):
         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(idValue, ))       
         deleteRecord = (cursor.fetchall())
         
-        # Locate the subject in the db by id, assign subject's information (dict()) to deleteRecord
-        #for i in data:
-         #   if i[entityId] == idValue:
-         #       deleteRecord = i
-         #       print(deleteRecord, "TEST")
 
         # Render the template, pre-populated with subject's existing information from db
         return render_template("delete.j2", dbEntity=dbEntity, data=data, operation="delete", deleteRecord=deleteRecord, deleted=False)
   
     # Submit new information to affect delete 
     if request.method == "POST":
-        print(request.form)
+        eeId=(request.form['confirmDelete'])
+
+        query = "SELECT * FROM Employees WHERE eeId = %s " 
+        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(eeId, ))       
+        deleteRecord = (cursor.fetchall())
+
+        #Still need to run actual delete query. Convert select to dict to populated sucessfuly deleted from 
+        #Then run delete query
+        #https://stackoverflow.com/questions/28755505/how-to-convert-sql-query-results-into-a-python-dictionary
+
+
+
         # Can probably get rid of deleted=True/False
-        return render_template("delete.j2", dbEntity=dbEntity, data=dict(request.form.items()), operation="delete",deleteRecord=None, deleted=True) 
+        return render_template("delete.j2", dbEntity=dbEntity, data=(deleteRecord), operation="delete",deleteRecord=deleteRecord, deleted=True) 
 
 
 @app.route('/employees/delete',methods=["GET", "POST"])
 def employeesDelete():
 
     dbEntity = "employees"
-    eeId = request.args.get("eeId")
-    
 
-    
+    if request.method == "GET":
+        eeId = request.args['eeId']
+        
+        
+        query = "SELECT * FROM Employees WHERE eeId = %s " 
+        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(eeId, ))       
+        data = (cursor.fetchall())
+
 
     #data = mockData['employees']
 
-    return delete(dbEntity, data)
+        return delete(dbEntity, data)
+    
+    if request.method == "POST":
+        confirmDelete= request.form
+        data =(confirmDelete.getlist('confirmDelete'))
+        
+        
+        return delete(dbEntity, data)
+
+
 
 
 @app.route('/customers/delete',methods=["GET", "POST"])

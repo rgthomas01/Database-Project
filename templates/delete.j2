@@ -91,25 +91,59 @@
 {{ deleteHeading }}
     {% if dbEntity == "employees" %}
         {{ deleteEmployeesPage }}
+        <form action="/{{dbEntity}}/delete" method="POST">
+        <div class="alert alert-danger" role="alert" style="max-width: 500px">
+            <b>Warning:</b> Clicking "Delete {{dbEntity[:-1].capitalize()}}" below will permanently delete the {{dbEntity[:-1]}} from the database. 
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="confirmDelete" name="confirmDelete" value="{{deleteRecord[0]['eeId']}}" required>
+            <label class="form-check-label" for="confirmDelete" >Yes I would like to delete the {{dbEntity[:-1]}}</label>
+        </div>
+        <button type="submit" class="btn btn-outline-danger">Delete {{dbEntity[:-1].capitalize()}}</button>
+        <a href="/{{dbEntity}}" class="btn btn-outline-primary">Return to search</a>
+        </form>
+        
     {% elif dbEntity == "customers" %}
         {{ deleteCustomersPage }}
+        <form action="/{{dbEntity}}/delete" method="POST">
+        <div class="alert alert-danger" role="alert" style="max-width: 500px">
+            <b>Warning:</b> Clicking "Delete {{dbEntity[:-1].capitalize()}}" below will permanently delete the {{dbEntity[:-1]}} from the database. 
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="confirmDelete" name="confirmDelete" value="{{deleteRecord[0]['customerId']}}" required>
+            <label class="form-check-label" for="confirmDelete" >Yes I would like to delete the {{dbEntity[:-1]}}</label>
+        </div>
+        <button type="submit" class="btn btn-outline-danger">Delete {{dbEntity[:-1].capitalize()}}</button>
+        <a href="/{{dbEntity}}" class="btn btn-outline-primary">Return to search</a>
+    </form>
     {% elif dbEntity == "purchases" %}
         {{ deletePurchasesPage }}
+        <form action="/{{dbEntity}}/delete" method="POST">
+        <div class="alert alert-danger" role="alert" style="max-width: 500px">
+            <b>Warning:</b> Clicking "Delete {{dbEntity[:-1].capitalize()}}" below will permanently delete the {{dbEntity[:-1]}} from the database. 
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="confirmDelete" name="confirmDelete" value="{{deleteRecord[0]['purchaseId']}}" required>
+            <label class="form-check-label" for="confirmDelete" >Yes I would like to delete the {{dbEntity[:-1]}}</label>
+        </div>
+        <button type="submit" class="btn btn-outline-danger">Delete {{dbEntity[:-1].capitalize()}}</button>
+        <a href="/{{dbEntity}}" class="btn btn-outline-primary">Return to search</a>
     {% elif dbEntity == "items" %}
        {{ deleteItemsPage }}
+       <form action="/{{dbEntity}}/delete" method="POST">
+        <div class="alert alert-danger" role="alert" style="max-width: 500px">
+            <b>Warning:</b> Clicking "Delete {{dbEntity[:-1].capitalize()}}" below will permanently delete the {{dbEntity[:-1]}} from the database. 
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="confirmDelete" name="confirmDelete" value="{{deleteRecord[0]['itemId']}}" required>
+            <label class="form-check-label" for="confirmDelete" >Yes I would like to delete the {{dbEntity[:-1]}}</label>
+        </div>
+        <button type="submit" class="btn btn-outline-danger">Delete {{dbEntity[:-1].capitalize()}}</button>
+        <a href="/{{dbEntity}}" class="btn btn-outline-primary">Return to search</a>
     {% endif %}
 
-    <form action="/{{dbEntity}}/delete" method="POST">
-      <div class="alert alert-danger" role="alert" style="max-width: 500px">
-        <b>Warning:</b> Clicking "Delete {{dbEntity[:-1].capitalize()}}" below will permanently delete the {{dbEntity[:-1]}} from the database. 
-      </div>
-      <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="confirmDelete" name="confirmDelete" value="yes" required>
-        <label class="form-check-label" for="confirmDelete">Yes I would like to delete the {{dbEntity[:-1]}}</label>
-      </div>
-      <button type="submit" class="btn btn-outline-danger">Delete {{dbEntity[:-1].capitalize()}}</button>
-      <a href="/{{dbEntity}}" class="btn btn-outline-primary">Return to search</a>
-    </form>
+
+    
 
 <!-- 5. Confirm new dbEntity created / updated -->
 <!-------------------------------------------------->
