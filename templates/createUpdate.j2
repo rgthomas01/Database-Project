@@ -178,12 +178,12 @@
     <div class="form-row">
         <div class="col-5">
             <label for="creditCardNumb">Credit Card Number</label>
-            <input type="text" class="form-control" id="creditCardNumb" name="creditCardNumb" value="{{updateRecord['creditCardNumb']}}" umber" required>
+            <input type="text" class="form-control" id="creditCardNumb" name="creditCardNumb" pattern="[0-9]{16}" title="16 digit credit card number" value="{{updateRecord['creditCardNumb']}}" umber" required>
         </div>
         <div class="col-2">
             <label for="creditCardExp">Expires</label>
-            <input type="text" class="form-control" id="creditCardExp" name="creditCardExp" value="{{updateRecord['creditCardExp']}}" ired>
-            <small id="creditCardExpHelp" class="form-text text-muted">MM/YY</small>
+            <input type="text" class="form-control" id="creditCardExp" name="creditCardExp" pattern="[0-9]{4}" title="Credit card expiration in MMYY format" value="{{updateRecord['creditCardExp']}}" ired>
+            <small id="creditCardExpHelp" class="form-text text-muted">MMYY</small>
         </div>
         <div class="col-3">
             <label for="costOfSale">Cost of sale</label>
@@ -230,11 +230,11 @@
         </div>
         <div class="form-row">
             <div class="col-5">
-                <input type="text" class="form-control" id="creditCardNumb" name="creditCardNumb" placeholder="Credit card number" required>
+                <input type="text" class="form-control" id="creditCardNumb" name="creditCardNumb" pattern="[0-9]{16}" title="16 digit credit card number" placeholder="Credit card number" required>
             </div>
             <div class="col-2">
-                <input type="text" class="form-control" id="creditCardExp" name="creditCardExp" placeholder="Expires" required>
-                <small id="creditCardExpHelp" class="form-text text-muted">MM/YY</small>
+                <input type="text" class="form-control" id="creditCardExp" name="creditCardExp" pattern="[0-9]{4}" title="Credit card expiration in MMYY format" placeholder="Expires" required>
+                <small id="creditCardExpHelp" class="form-text text-muted">MMYY</small>
             </div>
             <div class="col-3">
                 <input type="number" min="0.00" step="0.01" class="form-control" id="costOfSale" name="costOfSale" placeholder="Cost of sale" required>
