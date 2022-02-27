@@ -1,11 +1,11 @@
-function addFieldsHelper(itemIdVal=null, itemQuantityVal=null){
+function addFieldsHelper(itemIdVal=null, itemQuantityVal=null, inventoryItemIds=null){
 
     // itemsContainer where item lines will be dynamically generated
     let itemsContainer = document.getElementById("itemsContainer");
 
     // Determine number of existing rows for naming subsequent rows 
     let itemNum = itemsContainer.getElementsByClassName('form-row').length
-    console.log(itemNum)
+    // console.log(itemNum)
 
     // Find any previous form submit button and remove 
     if (document.getElementById('submitButton') !== null){
@@ -29,19 +29,52 @@ function addFieldsHelper(itemIdVal=null, itemQuantityVal=null){
     let rowCol1 = document.createElement("div")
     rowCol1.className = "col-2";
 
-    // Create input for itemId field
-    let itemId = document.createElement("input");
-    itemId.type = "text";
+    // Create input for itemId field - OLD - replacd with select below 
+    // let itemId = document.createElement("input");
+    // itemId.type = "text";
+    // itemId.className = "form-control";
+    // itemId.name = "itemId" + (itemNum+1);
+    // if (itemIdVal === null){
+    //     itemId.placeholder = "Item ID";
+    // } else {
+    //     itemId.value = itemIdVal;
+    // }
+    // itemId.required = true;
+
+    // Create select dropdown for itemId field pre-populated with items in inventory
+    let itemId = document.createElement("select");
     itemId.className = "form-control";
     itemId.name = "itemId" + (itemNum+1);
+    itemId.required = true;
+    // On create, this is placeholder value 
     if (itemIdVal === null){
-        itemId.placeholder = "Item ID";
+        let itemOption = document.createElement("option");
+        itemOption.className = "form-control";
+        itemOption.innerText = 'Item ID';
+        itemOption.value="";
+        itemOption.disabled = true;
+        itemOption.selected = true;
+        itemId.appendChild(itemOption)
+    // On update, there is a pre-selected value - **CHECK THIS 
     } else {
         itemId.value = itemIdVal;
+        let itemOption = document.createElement("option");
+        itemOption.className = "form-control";
+        itemOption.innerText = itemIdVal;
+        itemOption.selected = true;
+        itemId.appendChild(itemOption)
     }
-    itemId.required = true;
+
+    // Iterate through inventoryItemIds, create options within select
+    for (i = 0; i<inventoryItemIds.length; i++) {
+        let itemOption = document.createElement("option");
+        itemOption.className = "form-control";
+        itemOption.innerText = inventoryItemIds[i];
+        itemId.appendChild(itemOption);
+    }
 
     // Add itemId to rowCol1 and rowCol1 to itemRow
+    
     rowCol1.appendChild(itemId);
     itemRow.appendChild(rowCol1)
 
@@ -92,18 +125,19 @@ function addFieldsHelper(itemIdVal=null, itemQuantityVal=null){
 
 };
 
-function addFields(existingItems=0){
-    console.log(existingItems)
+function addFields(existingItems=0, inventoryItemIds=null){
+    // console.log(existingItems)
+    // console.log(inventoryItemIds)
     // Add new blank row during create & update purchase
     if (existingItems===0) {
-        addFieldsHelper();
+        addFieldsHelper(null,null,inventoryItemIds);
     // Adds existing items during update purchase
     } else {
         for (i = 0; i<existingItems.length; i++) {
             addFieldsHelper(existingItems[i]['itemId'],existingItems[i]['itemQuantity']);
          };
         let editExisting = document.getElementById("editExistingDiv");
-        console.log(editExisting);
+        // console.log(editExisting);
         editExisting.remove()
     };     
 };

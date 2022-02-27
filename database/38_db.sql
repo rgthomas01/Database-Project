@@ -1,6 +1,6 @@
 /* 38 Cycles DB File */
 
-DROP TABLE IF EXISTS `PurchaseItem`s;
+DROP TABLE IF EXISTS `PurchaseItems`;
 DROP TABLE IF EXISTS `Purchases`;
 DROP TABLE IF EXISTS `Customers`;
 DROP TABLE IF EXISTS `Employees`;

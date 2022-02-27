@@ -5,8 +5,8 @@
     {{ super() }}
 {% endblock %}
 
-<!-- 1.1 Set Heading for all create/update pages -->
-<!-------------------------------------------------->
+{#  1.1 Set Heading for all create/update pages  #}
+{# ---------------------------------------------- #}
 {% set createUpdateHeading %}
 {% if operation == "create" %}
 <h3>{{operation.capitalize()}} new {{dbEntity[:-1]}}</h3>
@@ -19,24 +19,19 @@
 {% endif %}
 {% endset %}
 
-<!-- 1.2 Set addEditItemsContainer for purchases -->
-<!-------------------------------------------------->
+{#  1.2 Set addEditItemsContainer for purchases  #}
+{# ---------------------------------------------- #}
 {% set addEditItemsContainer %}
     {# https://stackoverflow.com/questions/3842614/how-do-i-call-a-javascript-function-on-page-load #}
     {% if operation == "update" %}
         <script>
-        function loadExistingItems(){addFields({{existingItems}})};
+        function loadExistingItems(){addFields({{existingItems}},{{formPrefillData['itemIds']}})};
         window.onload=loadExistingItems;
         </script>
     {% endif %}
     <div class="form-row">
-        <!--
-        <div id="editExistingDiv" class="col-3">
-            <button type="button" class="btn btn-outline-primary" id="editExisting" onclick="addFields({{existingItems}})" style:"min-width: 200px">Edit Existing</a>
-        </div>
-        -->
         <div class="col-3">
-            <button type="button" class="btn btn-outline-primary" id="addItems" onclick="addFields()" style:"min-width: 200px">Add items</a>
+            <button type="button" class="btn btn-outline-primary" id="addItems" onclick="addFields(0,{{formPrefillData['itemIds']}})" style:"min-width: 200px">Add items</a>
         </div>
         <div class="col-3">
             <a href="" onClick="window.location.reload(true)" class="btn btn-outline-danger" id="addStartOver" style:"min-width: 200px">Start Over</a>
@@ -47,11 +42,11 @@
 
 {% endset %}
 
-<!-- 2.1 create / update employee forms --!> 
-<!-------------------------------------------------->
+{#  2.1 create / update employee forms #} 
+{# ---------------------------------------------- #}
 {% set createUpdateEmployeesForm %}
     <div class="form-row">
-        <!-- Pre-fill values when called to update -->
+        {#  Pre-fill values when called to update  #}
         {% if operation == "update" %}
             <div class="col-2">
                 <input type="text" class="form-control" id="eeId" name="eeId" value="{{updateRecord['eeId']}}">
@@ -62,7 +57,7 @@
             <div class="col">
                 <input type="text" class="form-control" id="eeLastName" name="eeLastName" value="{{updateRecord['eeLastName']}}" required>
             </div>
-        <!-- Otherwise, blank values when called to create -->
+        {#  Otherwise, blank values when called to create  #}
         {% else %}
             <div class="col">
                 <input type="text" class="form-control" id="eeFirstName" name="eeFirstName" placeholder="First Name" required>
@@ -72,7 +67,7 @@
             </div>
         {% endif %}
     </div>
-    <!-- NOTE: nice if we could get one of these to auto-select based on updateRecord - leaving it outside conditional for now -->
+    {#  NOTE: nice if we could get one of these to auto-select based on updateRecord - leaving it outside conditional for now  #}
     <div class="form-row">
         <div class="col-5">
         <label for="eePosition">Employee position</label>
@@ -88,15 +83,15 @@
     <div class="form-row">
         <button type="submit" class="btn btn-outline-primary">Submit</button>
     </div>
-<!-- below tag closes form referenced in createUpdateHeading -->
+{#  below tag closes form referenced in createUpdateHeading  #}
 </form>
 {% endset %}
 
-<!-- 2.2 Create / Update customer form --!> 
-<!-------------------------------------------------->
+{#  2.2 Create / Update customer form --!> 
+{# ---------------------------------------------- #}
 {% set createUpdateCustomersForm %}
     <div class="form-row">
-    <!-- Pre-fill values when called to update -->
+    {#  Pre-fill values when called to update  #}
     {% if operation == "update" %}
         <div class="col-2">
         <input type="text" class="form-control" id="customerId" name="customerId" value="{{updateRecord['customerId']}}" required>
@@ -124,7 +119,7 @@
         <button type="submit" class="btn btn-outline-primary">Submit</button>
     </div>
     
-    <!-- Otherwise, blank values when called to create -->
+    {#  Otherwise, blank values when called to create  #}
     {% else %}
         <div class="col">
         <input type="text" class="form-control" id="customerFirstName" name="customerFirstName" placeholder="First Name" required>
@@ -150,14 +145,14 @@
     </div>
     {% endif %}
 
-<!-- below tag closes form referenced in createUpdateHeading -->
+{#  below tag closes form referenced in createUpdateHeading  #}
 </form>
 {% endset %}
 
-<!-- 2.3 Create / Update purchases form --!> 
-<!-------------------------------------------------->
+{#  2.3 Create / Update purchases form --!> 
+{# ---------------------------------------------- #}
 {% set createUpdatePurchasesForm %}
-<!-- Pre-fill values when called to update -->
+{#  Pre-fill values when called to update  #}
 {% if operation == "update" %}
     <div class="form-row">
         <div class="col-4">
@@ -174,7 +169,7 @@
             <label for="customerId">Customer ID</label>
             <input type="text" class="form-control" id="customerId" name="customerId" value="{{updateRecord['customerId']}}" required>
         </div>
-        <!-- **TODO: NOT WORKING FOR SOME REASON - the updateRecord is here and has the data --> 
+        {#  **TODO: NOT WORKING FOR SOME REASON - the updateRecord is here and has the data  #} 
         <div class="col-3">
             <label for="eeId">Employee ID</label>
             <input type="text" class="form-control" id="eeId" name="eeId" value="{{updateRecord['eeId']}}">
@@ -203,7 +198,7 @@
     {# edit/add items #}
     {{ addEditItemsContainer }}
         
-    <!-- Otherwise, blank values when called to create -->
+    {#  Otherwise, blank values when called to create  #}
     {% else %}
         <div class="form-row">
             <div class="col-4">
@@ -224,8 +219,9 @@
                 </small>
             </div>
             <div class="col-4">
-                <select class="form-control" id="eeId" name="eeId" value="eeId" required>
+                <select class="form-control" id="eeId" name="eeId" value="eeId">
                     <option value="" disabled selected>Select Employee ID</option>
+                    <option value="">None / Self Checkout</option>
                     {% for i in formPrefillData['eeIds'] %} 
                         <option> {{i['eeId']}} </option>
                     {% endfor %}
@@ -254,14 +250,14 @@
 
     {% endif %}
 
-<!-- below tag closes form referenced in createUpdateHeading -->
+{#  below tag closes form referenced in createUpdateHeading  #}
 </form>
 {% endset %}
 
-<!-- 2.4 Create / Update items form --!> 
-<!-------------------------------------------------->
+{#  2.4 Create / Update items form --!> 
+{# ---------------------------------------------- #}
 {% set createUpdateItemsForm %}
-    <!-- Pre-fill values when called to update -->
+    {#  Pre-fill values when called to update  #}
     {% if operation == "update" %}
         <div class="form-row">
             <div class="col-3">
@@ -280,7 +276,7 @@
             </div>
         </div>
         <div class="form-row">
-            <!-- NOTE: nice if we could get one of these to auto-select based on updateRecord - leaving it outside conditional for now -->
+            {#  NOTE: nice if we could get one of these to auto-select based on updateRecord - leaving it outside conditional for now  #}
             <div class="col-5">
             <select class="form-control" id="itemType" name="itemType" value="itemType" required>
                 <option value="" disabled selected>Select item type</option>
@@ -298,7 +294,7 @@
             <button type="submit" class="btn btn-outline-primary">Submit</button>
         </div>
 
-    <!-- Otherwise, blank values when called to create --> 
+    {#  Otherwise, blank values when called to create  #} 
     {% else %}
     <div class="form-row">
         <div class="col-4">
@@ -332,21 +328,21 @@
     </div>
     {% endif %}
 
-<!-- below tag closes form referenced in createUpdateHeading -->
+{#  below tag closes form referenced in createUpdateHeading  #}
 </form>
 {% endset %}
 
 
-<!-- 3. Render the relevant create/update form -->
-<!-------------------------------------------------->
+{#  3. Render the relevant create/update form  #}
+{# ---------------------------------------------- #}
 {% block content %}
-<!-- Page heading -->
+{#  Page heading  #}
 <div> 
     <h2>{{dbEntity.capitalize()}}</h2>
     <hr> 
 
-<!-- 4. Create / update new dbEntity -->
-<!-------------------------------------------------->
+{#  4. Create / update new dbEntity  #}
+{# ---------------------------------------------- #}
 {% if created == False or updated == False %}
 {{ createUpdateHeading}}
     {% if dbEntity == "employees" %}
@@ -359,8 +355,8 @@
         {{ createUpdateItemsForm }}
     {% endif %}
 
-<!-- 5. Confirm new dbEntity created / updated -->
-<!-------------------------------------------------->
+{#  5. Confirm new dbEntity created / updated  #}
+{# ---------------------------------------------- #}
 {% elif created == True or updated == True %}
     <h3>{{dbEntity[:-1].capitalize()}} successfully {{operation}}d.</h3>
     <br>

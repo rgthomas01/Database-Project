@@ -174,6 +174,18 @@ def purchasesCreate():
         query = "SELECT customerId FROM Customers;"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         formPrefillData['customerIds'] = cursor.fetchall()
+        # Get itemId values 
+        query = "SELECT itemId FROM Items;"
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        formPrefillData['itemIds'] = [i['itemId'] for i in cursor.fetchall()] #list > template > js array
+        
+        
+        #LEFT OFF HERE - 
+        # formPrefilData is passed to the template
+        # {{formPrefillData['itemIds']}} to access the itemIds
+        # pass those through when the template calls addItems.js
+        # create parameters/logic in addItems to take itemIds and put them in the fields
+            # requires do selct that pre-selects based on whether update or create
 
         return create(dbEntity, formPrefillData)
 
@@ -197,19 +209,17 @@ def purchasesCreate():
             query = "INSERT INTO Purchases (purchaseId, customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale, eeId) VALUES (NULL, %s,%s,%s,%s,%s,%s);"
             cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (customerId, purchaseDate, creditCardNumb, creditCardExp, costOfSale    , eeId, ))       
             results = (cursor.fetchall())
-        
-        #take purchaseId from purchase record created to use in adding PurchaseItems
-        cursor.execute('select LAST_INSERT_ID()')
-        purchaseIdtuple = (cursor.fetchall())
-        purchaseId = purchaseIdtuple[0].get('LAST_INSERT_ID()')
-        
+               
        #TODOS ->
         #select last_insert may not be way to go here, need to look at functionality may be better to get purchaseId through a select.
         #https://dba.stackexchange.com/questions/81604/how-to-insert-values-in-junction-table-for-many-to-many-relationships
        
         
-        # Loop through >= 1 itemId and itemQuantity values from form, insert into PurchaseItems 
+        # Update PurchaseItems - Loop through >= 1 itemId and itemQuantity values from form, insert into PurchaseItems 
         # TODO add support to check Item quantity prior to completing purchase 
+        #take purchaseId from purchase record created to use in adding PurchaseItems
+        cursor.execute('select LAST_INSERT_ID()')
+        purchaseId = (cursor.fetchall())[0].get('LAST_INSERT_ID()')
         purchaseItemIds = [request.form[i] for i in request.form.keys() if 'itemId' in i]
         purchaseItemQuantities = [request.form[i] for i in request.form.keys() if 'itemQuantity' in i]
         for i in range(len(purchaseItemIds)):
@@ -266,7 +276,6 @@ def update(dbEntity, data):
 
     # Submit new information to affect update 
     if request.method == "POST":
-        print(request.form)
         # Can probably get rid of updated=True/False
         return render_template("createUpdate.j2", dbEntity=dbEntity, data=dict(request.form.items()), operation="update",updateRecord=None, updated=True)
 
