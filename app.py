@@ -186,9 +186,6 @@ def purchasesCreate():
         creditCardExp = request.form["creditCardExp"]
         costOfSale = request.form["costOfSale"]
         
-        #TODO needs looping to catch all itemId's and itemQuantitys
-        itemId = request.form["itemId1"]
-        itemQuantity = request.form["itemQuantity1"]
 
         #if self checkout was used. EmployeeId is NULL
         if eeId =="":
@@ -210,9 +207,15 @@ def purchasesCreate():
         #select last_insert may not be way to go here, need to look at functionality may be better to get purchaseId through a select.
         #https://dba.stackexchange.com/questions/81604/how-to-insert-values-in-junction-table-for-many-to-many-relationships
        
-        query = "INSERT INTO PurchaseItems (purchaseId, itemId, itemQuantity) VALUES (%s,%s,%s);"
-        cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (purchaseId, itemId, itemQuantity, ))       
-        results = (cursor.fetchall())
+        
+        # Loop through >= 1 itemId and itemQuantity values from form, insert into PurchaseItems 
+        # TODO add support to check Item quantity prior to completing purchase 
+        purchaseItemIds = [request.form[i] for i in request.form.keys() if 'itemId' in i]
+        purchaseItemQuantities = [request.form[i] for i in request.form.keys() if 'itemQuantity' in i]
+        for i in range(len(purchaseItemIds)):
+            query = "INSERT INTO PurchaseItems (purchaseId, itemId, itemQuantity) VALUES (%s,%s,%s);"
+            cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (purchaseId, purchaseItemIds[i], purchaseItemQuantities[i]))       
+            results = (cursor.fetchall())
 
         return create(dbEntity)
 
