@@ -430,6 +430,7 @@ def itemsUpdate():
 def delete(dbEntity,data):
         
     if request.method == "GET":
+        deleteRecord = [i for i in request.args.items()]
         # Parse incoming request to get id attribute name (e.g., 'eeId', 'purchaseId') and its value
 
         entityId = deleteRecord[0][0]
