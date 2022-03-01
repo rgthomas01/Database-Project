@@ -53,11 +53,56 @@ def employeeRetrieve():
 
     dbEntity = "employees"
 
-    if request.method == "GET":
+    #get arguements from Get Request
+    retrieveRecord = [i for i in request.args.items()]
+
+
+    if request.method == "GET" and len(retrieveRecord)>0:
+        
+        if 'retrieveAll' in request.args.keys(): #if retrieve all 
+        
+            query = "Select * FROM Employees;"
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            results = (cursor.fetchall())
+            return retrieve(dbEntity, data= results)
+
+        else:
+            param_list = []
+            
+            #catch non empty params and add them to a param_list to be used as quer_param
+            if request.args['eeId'] != '':
+                eeId = request.args['eeId']
+                param_list.append(eeId)
+            if request.args["eeFirstName"] != '':
+                eeFirstName = request.args['eeFirstName']
+                param_list.append(eeFirstName)
+            if request.args['eeLastName'] != '':
+                eeLastName = request.args['eeLastName']
+                param_list.append(eeLastName)
+
+            #build string to use after WHERE clause
+            q_string = ''
+            for i in request.args.keys():
+                if request.args[i] != '':
+                    
+                    if len(q_string)>0:
+                        q_string = q_string +" OR "
+                    q_string = q_string + i + " = %s"
+            
+            query =  "Select * FROM Employees WHERE " + q_string + ";" 
+            cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(param_list, ))
+            results = (cursor.fetchall())
+            
+            if len(results)==0:
+                results = None
+            return retrieve(dbEntity, data= results)
+
+
+    else:  #if request with No args , without this /employees page breaks 
         query = "Select * FROM Employees;"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = (cursor.fetchall())
-        return retrieve(dbEntity, data= results)
+        return retrieve(dbEntity, data=results)
 
 
 @app.route('/customers',methods=["GET", "POST"])
