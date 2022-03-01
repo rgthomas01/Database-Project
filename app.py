@@ -36,6 +36,7 @@ def main():
 # ------------------------------RETRIEVE------------------------------
 
 def retrieve(dbEntity, data):
+    #test comment for branching 
     # RETRIEVE - landing page / retrieve results 
     if request.method == "GET": 
 
