@@ -24,10 +24,12 @@
 {% set addEditItemsContainer %}
     {# https://stackoverflow.com/questions/3842614/how-do-i-call-a-javascript-function-on-page-load #}
     {% if operation == "update" %}
-        <script>
-        function loadExistingItems(){addFields({{existingItems}},{{formPrefillData['itemIds']}})};
-        window.onload=loadExistingItems;
-        </script>
+        {% if updated == False %}
+            <script>
+            function loadExistingItems(){addFields({{existingItems}},{{formPrefillData['itemIds']}})};
+            window.onload=loadExistingItems;
+            </script>
+        {% endif %}
     {% endif %}
     <div class="form-row">
         <div class="col-3">
@@ -155,21 +157,21 @@
 {#  Pre-fill values when called to update  #}
 {% if operation == "update" %}
     <div class="form-row">
+        <div class="col-3">
+            <label for="purchaseId">Purchase ID</label>
+            <input type="text" class="form-control" id="purchaseId" name="purchaseId" value="{{updateRecord['purchaseId']}}" required>
+        </div>
         <div class="col-4">
             <label for="purchaseDate">Purchase date</label>
             <input type="date" class="form-control" id="purchaseDate" name="purchaseDate" value="{{updateRecord['purchaseDate']}}" required>
         </div>
     </div>
     <div class="form-row">
-        <div class="col-3">
-            <label for="purchaseId">Purchase ID</label>
-            <input type="text" class="form-control" id="purchaseId" name="purchaseId" value="{{updateRecord['purchaseId']}}" required>
-        </div>
+
         <div class="col-3">
             <label for="customerId">Customer ID</label>
             <input type="text" class="form-control" id="customerId" name="customerId" value="{{updateRecord['customerId']}}" required>
         </div>
-        {#  **TODO: NOT WORKING FOR SOME REASON - the updateRecord is here and has the data  #} 
         <div class="col-3">
             <label for="eeId">Employee ID</label>
             <input type="text" class="form-control" id="eeId" name="eeId" value="{{updateRecord['eeId']}}">

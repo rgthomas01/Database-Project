@@ -163,29 +163,32 @@ def purchasesCreate():
 
     dbEntity = "purchases"
 
+
+    formPrefillData = {'eeIds':[],'customerIds':[]}
+    # Get eeId values 
+    query = "SELECT eeId FROM Employees;"
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    formPrefillData['eeIds'] = cursor.fetchall()
+    # Get customerId values 
+    query = "SELECT customerId FROM Customers;"
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    formPrefillData['customerIds'] = cursor.fetchall()
+    # Get itemId values 
+    query = "SELECT itemId FROM Items;"
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    formPrefillData['itemIds'] = [i['itemId'] for i in cursor.fetchall()] #list > template > js array
+    
+    
+    #LEFT OFF HERE - 
+    # formPrefilData is passed to the template
+    # {{formPrefillData['itemIds']}} to access the itemIds
+    # pass those through when the template calls addItems.js
+    # create parameters/logic in addItems to take itemIds and put them in the fields
+        # requires do selct that pre-selects based on whether update or create
+
     # Get eeId and customerId data to populate formPrefillData
     if request.method == "GET":
-        formPrefillData = {'eeIds':[],'customerIds':[]}
-        # Get eeId values 
-        query = "SELECT eeId FROM Employees;"
-        cursor = db.execute_query(db_connection=db_connection, query=query)
-        formPrefillData['eeIds'] = cursor.fetchall()
-        # Get customerId values 
-        query = "SELECT customerId FROM Customers;"
-        cursor = db.execute_query(db_connection=db_connection, query=query)
-        formPrefillData['customerIds'] = cursor.fetchall()
-        # Get itemId values 
-        query = "SELECT itemId FROM Items;"
-        cursor = db.execute_query(db_connection=db_connection, query=query)
-        formPrefillData['itemIds'] = [i['itemId'] for i in cursor.fetchall()] #list > template > js array
-        
-        
-        #LEFT OFF HERE - 
-        # formPrefilData is passed to the template
-        # {{formPrefillData['itemIds']}} to access the itemIds
-        # pass those through when the template calls addItems.js
-        # create parameters/logic in addItems to take itemIds and put them in the fields
-            # requires do selct that pre-selects based on whether update or create
+
 
         return create(dbEntity, formPrefillData)
 
@@ -227,7 +230,8 @@ def purchasesCreate():
             cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (purchaseId, purchaseItemIds[i], purchaseItemQuantities[i]))       
             results = (cursor.fetchall())
 
-        return create(dbEntity)
+        print(formPrefillData)
+        return create(dbEntity, formPrefillData)
 
 
 @app.route('/items/create',methods=["GET", "POST"])
@@ -252,40 +256,68 @@ def itemsCreate():
 
 # ------------------------------UPDATE------------------------------
 
-def update(dbEntity, data):
+def update(dbEntity, data, formPrefillData=None):
 
+    # GET will initially show a form filled with existing data. 
     if request.method == "GET":
-        # Parse incoming request to get id attribute name (e.g., 'eeId', 'purchaseId') and its value
-        updateRecord = [i for i in request.args.items()]
+        # Parse incoming request to get the key:value of dbEntity id (e.g., 'eeId':'123', 'purchaseId':'456')
+        updateRecord = [i for i in request.args.items()] # initially holds entityId and idValue 
         entityId = updateRecord[0][0]
         idValue = updateRecord[0][1]
 
-        # Locate the subject in the db by id, assign subject's information (dict()) to updateRecord
-        for i in data:
-            if i[entityId] == idValue:
-                updateRecord = i
+        # Locate the dbEntity entry by its id, assign its data to updateRecord
+        query = "SELECT * FROM " + dbEntity.title() + " WHERE " + entityId+ " = %s" # TODO - this needs to be fixed?
+        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(idValue, ))       
+        results = (cursor.fetchall())
+        updateRecord = list(results)[0]
 
-        # Pull existing items for purchases update
+        # Specific to Purchases, pull associated PurchaseItems
+        existingItems = [] # Default if dbEntity not Purchases
         if dbEntity == "purchases":
+            # # JSON Version 
             existingItems = mockData['purchasesItems']
-        else: 
-            existingItems = []
+            # # SQL Version 
+            query = "SELECT PurchaseItems.itemId, PurchaseItems.itemQuantity FROM PurchaseItems JOIN Purchases ON Purchases.purchaseId = PurchaseItems.purchaseId WHERE Purchases.purchaseId = %s;"
+            cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(idValue,))
+            results = cursor.fetchall()
 
         # Render the template, pre-populated with subject's existing information from db
-        return render_template("createUpdate.j2", dbEntity=dbEntity, data=data, operation="update", updateRecord=updateRecord, existingItems=existingItems, updated=False)
+        return render_template("createUpdate.j2", dbEntity=dbEntity, data=data, operation="update", updateRecord=updateRecord, existingItems=existingItems, formPrefillData=formPrefillData, updated=False)
 
     # Submit new information to affect update 
     if request.method == "POST":
-        # Can probably get rid of updated=True/False
-        return render_template("createUpdate.j2", dbEntity=dbEntity, data=dict(request.form.items()), operation="update",updateRecord=None, updated=True)
+        updateRecord = [i for i in request.form.items()]
+        entityId = updateRecord[0][0]
+        idValue = updateRecord[0][1]
+
+        # Run UPDATE query 
+        colVals = dict(request.form.items())
+        updateStr = ""
+        for key, val in colVals.items():
+            # TODO Temporary bypass on PurchaseItems to get Purchases partially working
+            # ...need to do separate logic to update PurchaseItems
+            if dbEntity == "purchases" and 'item' in str(key) or 'item' in str(val):
+                pass
+            else:
+                updateStr += (f"{str(key)}='{str(val)}', ")
+        updateStr = updateStr[:-2]
+        query = "UPDATE "+ dbEntity.title() +" SET "+updateStr+" WHERE " +entityId+"= %s"
+        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(idValue,))
+        results = cursor.fetchall()
+        
+
+        # Render success page         
+        return render_template("createUpdate.j2", dbEntity=dbEntity, data=dict(request.form.items()), operation="update",updateRecord=None, formPrefillData=formPrefillData, updated=True)
 
 
 @app.route('/employees/update',methods=["GET", "POST"])
 def employeesUpdate():
 
     dbEntity = "employees"
+    # JSON Version 
     data = mockData['employees']
 
+    # SQL Version 
     return update(dbEntity, data)
  
 
@@ -293,8 +325,10 @@ def employeesUpdate():
 def customersUpdate():
 
     dbEntity = "customers"
+    # JSON Version 
     data = mockData['customers']
 
+    # SQL Version 
     return update(dbEntity, data)
     
 
@@ -302,18 +336,47 @@ def customersUpdate():
 @app.route('/purchases/update',methods=["GET", "POST"])
 def purchasesUpdate():
 
+    # Declare the dbEntity
     dbEntity = "purchases"
+
+    # Obtain data to pre-fill form fields 
+    formPrefillData = {'eeIds':[],'customerIds':[]}
+    # Get eeId values 
+    query = "SELECT eeId FROM Employees;"
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    formPrefillData['eeIds'] = cursor.fetchall()
+    # Get customerId values 
+    query = "SELECT customerId FROM Customers;"
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    formPrefillData['customerIds'] = cursor.fetchall()
+    # Get itemId values 
+    query = "SELECT itemId FROM Items;"
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    formPrefillData['itemIds'] = [i['itemId'] for i in cursor.fetchall()] #list > template > js array
+    
+    
+        
+
+    # JSON Version 
     data = mockData['purchases']
 
-    return update(dbEntity, data)
+    # SQL Version 
+
+
+    print(formPrefillData)
+
+
+    return update(dbEntity, data, formPrefillData)
 
 
 @app.route('/items/update',methods=["GET", "POST"])
 def itemsUpdate():
 
     dbEntity = "items"
+    # JSON Version 
     data = mockData['items']
 
+    # SQL Version 
     return update(dbEntity, data)
 
 
