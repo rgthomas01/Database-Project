@@ -615,41 +615,37 @@ def delete(dbEntity,data):
         return render_template("delete.j2", dbEntity=dbEntity, data=(deleteRecord), operation="delete",deleteRecord=deleteRecord, deleted=True) 
 
 
-@app.route('/employees/delete',methods=["GET", "POST"])
-def employeesDelete():
-    db_connection = db.connect_to_database()
+# @app.route('/employees/delete',methods=["GET", "POST"])
+# def employeesDelete():
+#     db_connection = db.connect_to_database()
 
-    dbEntity = "employees"
+#     dbEntity = "employees"
 
-    if request.method == "GET":
-        eeId = request.args['eeId']
+#     if request.method == "GET":
+#         eeId = request.args['eeId']
 
-        query = "SELECT * FROM Employees WHERE eeId = %s " 
-        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(eeId, ))       
-        data = (cursor.fetchall())
+#         query = "SELECT * FROM Employees WHERE eeId = %s " 
+#         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(eeId, ))       
+#         data = (cursor.fetchall())
 
         
+#     #data = mockData['employees']
 
+#         return delete(dbEntity, data)
     
+#     if request.method == "POST":
+#         entityId= request.form['confirmDelete']
 
+#         #to populate 
+#         query = "SELECT * FROM Employees WHERE eeId = %s " 
+#         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(entityId, ))       
+#         data = cursor.fetchall()
 
-    #data = mockData['employees']
+#         query2 = "DELETE FROM Employees WHERE eeId = %s"
+#         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(entityId, ))       
+#         data = cursor.fetchall()
 
-        return delete(dbEntity, data)
-    
-    if request.method == "POST":
-        entityId= request.form['confirmDelete']
-
-        #to populate 
-        query = "SELECT * FROM Employees WHERE eeId = %s " 
-        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(entityId, ))       
-        data = cursor.fetchall()
-
-        query2 = "DELETE FROM Employees WHERE eeId = %s"
-        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(entityId, ))       
-        data = cursor.fetchall()
-
-        return delete(dbEntity, data)
+#         return delete(dbEntity, data)
 
 
 
