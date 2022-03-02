@@ -17,7 +17,7 @@ app = Flask(__name__)
 # app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 
-db_connection = db.connect_to_database()
+#db_connection = db.connect_to_database()
 mysql = MySQL(app)
 
 # ------------------------------DATA------------------------------
@@ -31,6 +31,7 @@ with open('data/mockData.json', 'r+') as infile:
 
 @app.route('/',methods=["GET"])
 def main():
+    db_connection = db.connect_to_database()
     if request.method == "GET": 
             return render_template("main.j2")
 
@@ -38,7 +39,8 @@ def main():
 
 def retrieve(dbEntity, data):
     #test comment for branching 2
-    # RETRIEVE - landing page / retrieve results 
+    # RETRIEVE - landing page / retrieve results
+    db_connection = db.connect_to_database() 
     if request.method == "GET": 
 
         # Landing page for search - take non-query URL request to /<dbEntity>
@@ -52,7 +54,7 @@ def retrieve(dbEntity, data):
 
 @app.route('/employees',methods=["GET", "POST"])
 def employeeRetrieve():
-
+    db_connection = db.connect_to_database()
     dbEntity = "employees"
 
     #get arguements from Get Request
@@ -109,6 +111,7 @@ def employeeRetrieve():
 
 @app.route('/customers',methods=["GET", "POST"])
 def customerRetrieve():
+    db_connection = db.connect_to_database()
     dbEntity = "customers"
 
     #get arguements from Get Request
@@ -166,6 +169,7 @@ def customerRetrieve():
 
 @app.route('/purchases',methods=["GET", "POST"])
 def purchasesRetrieve():
+    db_connection = db.connect_to_database()
 
     dbEntity = "purchases"
 
@@ -223,7 +227,7 @@ def purchasesRetrieve():
 
 @app.route('/items',methods=["GET", "POST"])
 def itemsRetrieve():
-
+    db_connection = db.connect_to_database()
     dbEntity = "items"
 
     retrieveRecord = [i for i in request.args.items()]
@@ -288,6 +292,7 @@ def create(dbEntity, formPrefillData=None):
         dbEntity -- corresponds to table in the databae, e.g., Employees
         formPrefill -- to pre-populate UI form with existing database values, e.g., eeIds, customerIds
     """
+    db_connection = db.connect_to_database()
 
    # Blank form to create 
     if request.method == "GET":
@@ -303,6 +308,7 @@ def create(dbEntity, formPrefillData=None):
 
 @app.route('/employees/create',methods=["GET", "POST"])
 def employeesCreate():
+    db_connection = db.connect_to_database()
 
     dbEntity = "employees"
     if request.method == "POST":
@@ -318,6 +324,7 @@ def employeesCreate():
 
 @app.route('/customers/create',methods=["GET", "POST"])
 def customersCreate():
+    db_connection = db.connect_to_database()
 
     dbEntity = "customers"
     if request.method == "POST":
@@ -344,6 +351,7 @@ def customersCreate():
 
 @app.route('/purchases/create',methods=["GET", "POST"])
 def purchasesCreate():
+    db_connection = db.connect_to_database()
 
     dbEntity = "purchases"
 
@@ -420,7 +428,8 @@ def purchasesCreate():
 
 @app.route('/items/create',methods=["GET", "POST"])
 def itemsCreate():
-    
+    db_connection = db.connect_to_database()
+
 
     dbEntity = "items"
     if request.method == "POST":
@@ -441,7 +450,7 @@ def itemsCreate():
 # ------------------------------UPDATE------------------------------
 
 def update(dbEntity, data, formPrefillData=None):
-
+    db_connection = db.connect_to_database()
     # GET will initially show a form filled with existing data. 
     if request.method == "GET":
         # Parse incoming request to get the key:value of dbEntity id (e.g., 'eeId':'123', 'purchaseId':'456')
@@ -496,6 +505,7 @@ def update(dbEntity, data, formPrefillData=None):
 
 @app.route('/employees/update',methods=["GET", "POST"])
 def employeesUpdate():
+    db_connection = db.connect_to_database()
 
     dbEntity = "employees"
     # JSON Version 
@@ -507,6 +517,7 @@ def employeesUpdate():
 
 @app.route('/customers/update',methods=["GET", "POST"])
 def customersUpdate():
+    db_connection = db.connect_to_database()
 
     dbEntity = "customers"
     # JSON Version 
@@ -519,6 +530,7 @@ def customersUpdate():
 
 @app.route('/purchases/update',methods=["GET", "POST"])
 def purchasesUpdate():
+    db_connection = db.connect_to_database()
 
     # Declare the dbEntity
     dbEntity = "purchases"
@@ -555,6 +567,7 @@ def purchasesUpdate():
 
 @app.route('/items/update',methods=["GET", "POST"])
 def itemsUpdate():
+    db_connection = db.connect_to_database()
 
     dbEntity = "items"
     # JSON Version 
@@ -567,7 +580,8 @@ def itemsUpdate():
 # ------------------------------DELETE------------------------------
 
 def delete(dbEntity,data):
-        
+    db_connection = db.connect_to_database()
+ 
     if request.method == "GET":
         deleteRecord = [i for i in request.args.items()]
         # Parse incoming request to get id attribute name (e.g., 'eeId', 'purchaseId') and its value
@@ -603,6 +617,7 @@ def delete(dbEntity,data):
 
 @app.route('/employees/delete',methods=["GET", "POST"])
 def employeesDelete():
+    db_connection = db.connect_to_database()
 
     dbEntity = "employees"
 
@@ -641,6 +656,7 @@ def employeesDelete():
 
 @app.route('/customers/delete',methods=["GET", "POST"])
 def customersDelete():
+    db_connection = db.connect_to_database()
 
     dbEntity = "customers"
     data = mockData['customers']
@@ -650,6 +666,7 @@ def customersDelete():
 
 @app.route('/purchases/delete',methods=["GET", "POST"])
 def purchasesDelete():
+    db_connection = db.connect_to_database()
 
     dbEntity = "purchases"
     data = mockData['purchases']
@@ -659,6 +676,7 @@ def purchasesDelete():
 
 @app.route('/items/delete',methods=["GET", "POST"])
 def itemsDelete():
+    db_connection = db.connect_to_database()
 
     dbEntity = "items"
     data = mockData['items']
