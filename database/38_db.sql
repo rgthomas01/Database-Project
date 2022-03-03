@@ -16,19 +16,19 @@ CREATE TABLE `Customers` (
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
 INSERT INTO `Customers` (`customerId`, `customerFirstName`, `customerLastName`, `customerEmail`, `membershipStatus`) 
-VALUES (NULL, 'John', 'Smith ', 'johnsmith@aol.com', '1');
+VALUES (NULL, 'John', 'Smith ', 'johnsmith@example.com', '1');
 
 INSERT INTO `Customers` (`customerId`, `customerFirstName`, `customerLastName`, `customerEmail`, `membershipStatus`) 
-VALUES (NULL, 'Fred', 'Flintstone ', 'yabadabadoo@yahoo.com', '1');
+VALUES (NULL, 'Fred', 'Flintstone ', 'yabadabadoo@example.com', '1');
 
 INSERT INTO `Customers` (`customerId`, `customerFirstName`, `customerLastName`, `customerEmail`, `membershipStatus`) 
-VALUES (NULL, 'Barney', 'Rubble ', 'rubble@gmail.com', '0');
+VALUES (NULL, 'Barney', 'Rubble ', 'rubble@example.com', '0');
 
 INSERT INTO `Customers` (`customerId`, `customerFirstName`, `customerLastName`, `customerEmail`, `membershipStatus`) 
-VALUES (NULL, 'Wilma', 'Flintstone ', 'pebblesmom@yahoo.com', '1');
+VALUES (NULL, 'Wilma', 'Flintstone ', 'pebblesmom@example.com', '1');
 
 INSERT INTO `Customers` (`customerId`, `customerFirstName`, `customerLastName`, `customerEmail`, `membershipStatus`) 
-VALUES (NULL, 'Betty', 'Rubble ', 'bambamsmom@gmail.com', '0');
+VALUES (NULL, 'Betty', 'Rubble ', 'bambamsmom@example.com', '0');
 
 CREATE TABLE `Items` (
   `itemId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
