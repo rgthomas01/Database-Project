@@ -163,8 +163,9 @@
             <div class="form-row">
               <div class="col-5">
                 <label for="itemType">Item Type</label>
-                <select class="form-control" id="itemType" name="itemType" value="itemType">
-                  <option value="" disabled selected>Select your option</option>
+                <select class="form-control" id="itemType" name="itemType">
+                  {# TODO: Switch this to 'disabled' when we update logic in app.py #}
+                  <option value="" selected>Select your option</option>
                   <option>Mountain Bike</option>
                   <option>Road Bike</option>
                   <option>Accessory</option>
