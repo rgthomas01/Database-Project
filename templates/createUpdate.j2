@@ -51,12 +51,16 @@
         {#  Pre-fill values when called to update  #}
         {% if operation == "update" %}
             <div class="col-2">
-                <input type="text" class="form-control" id="eeId" name="eeId" value="{{updateRecord['eeId']}}">
+                <label for="eeId">ID</label>
+                <input type="text" class="form-control" id="eeId" name="eeId" value="{{updateRecord['eeId']}}" readonly>
             </div>
             <div class="col">
+                <label for="eeFirstName">First name</label>
+
                 <input type="text" class="form-control" id="eeFirstName" name="eeFirstName" value="{{updateRecord['eeFirstName']}}" required>
             </div>
             <div class="col">
+                <label for="eeLastName">Last name</label>
                 <input type="text" class="form-control" id="eeLastName" name="eeLastName" value="{{updateRecord['eeLastName']}}" required>
             </div>
         {#  Otherwise, blank values when called to create  #}
@@ -104,20 +108,25 @@
     {#  Pre-fill values when called to update  #}
     {% if operation == "update" %}
         <div class="col-2">
-        <input type="text" class="form-control" id="customerId" name="customerId" value="{{updateRecord['customerId']}}" required>
+        <label for="customerId">ID</label>
+        <input type="text" class="form-control" id="customerId" name="customerId" value="{{updateRecord['customerId']}}" readonly>
         </div>
         <div class="col">
+        <label for="customerFirstName">First name</label>
         <input type="text" class="form-control" id="customerFirstName" name="customerFirstName" value="{{updateRecord['customerFirstName']}}" required>
         </div>
         <div class="col">
+        <label for="customerLastName">Last name</label>
         <input type="text" class="form-control" id="customerLastName" name="customerLastName" value="{{updateRecord['customerLastName']}}" required>
         </div>
     </div>
     <div class="form-row">
         <div class="col-5">
+        <label for="customerEmail">Email</label>
         <input type="text" class="form-control" id="customerEmail" name="customerEmail" value="{{updateRecord['customerEmail']}}" required>
         </div>
         <div class="col-5">
+        <label for="membershipStatus">Membership status</label>
         <select class="custom-select" name="membershipStatus" id="membershipStatus" required>
             <option value="">Is customer a member?</option>
             <option value="1">Yes</option>
@@ -166,8 +175,8 @@
 {% if operation == "update" %}
     <div class="form-row">
         <div class="col-3">
-            <label for="purchaseId">Purchase ID</label>
-            <input type="text" class="form-control" id="purchaseId" name="purchaseId" value="{{updateRecord['purchaseId']}}" required>
+            <label for="purchaseId">ID</label>
+            <input type="text" class="form-control" id="purchaseId" name="purchaseId" value="{{updateRecord['purchaseId']}}" readonly>
         </div>
         <div class="col-4">
             <label for="purchaseDate">Purchase date</label>
@@ -271,23 +280,28 @@
     {% if operation == "update" %}
         <div class="form-row">
             <div class="col-3">
-            <input type="text" class="form-control" id="itemId" name="itemId" value="{{updateRecord['itemId']}}"  required>
+                <label for="itemId">ID</label>
+                <input type="text" class="form-control" id="itemId" name="itemId" value="{{updateRecord['itemId']}}"  readonly>
             </div>
             <div class="col-4">
-            <input type="text" class="form-control" id="itemName" name="itemName" value="{{updateRecord['itemName']}}"  required>
+                <label for="itemName">Item name</label>
+                <input type="text" class="form-control" id="itemName" name="itemName" value="{{updateRecord['itemName']}}"  required>
             </div>
             <div class="col-3">
+                <label for="itemPrice">Price</label>
                 <input type="number" min="0.00" step="0.01" class="form-control" id="itemPrice" name="itemPrice" value="{{updateRecord['itemPrice']}}" required>
             </div>
         </div>
         <div class="form-row">
             <div class="col-9">
-            <input type="text" class="form-control" id="itemDescription" name="itemDescription" value="{{updateRecord['itemDescription']}}" required>
+                <label for="itemDescription">Description</label>
+                <input type="text" class="form-control" id="itemDescription" name="itemDescription" value="{{updateRecord['itemDescription']}}" required>
             </div>
         </div>
         <div class="form-row">
             {#  NOTE: nice if we could get one of these to auto-select based on updateRecord - leaving it outside conditional for now  #}
             <div class="col-5">
+            <label for="itemType">Item type</label>
             <select class="form-control" id="itemType" name="itemType" value="itemType" required>
                 <option value="" disabled selected>Select item type</option>
                 <option>Mountain Bike</option>
@@ -297,6 +311,7 @@
             </select>              
             </div>
             <div class="col-3">
+                <label for="inventoryOnHand">Inventory</label>
                 <input type="number" min="1" step="1" class="form-control" id="inventoryOnHand" name="inventoryOnHand" value="{{updateRecord['inventoryOnHand']}}" required>
             </div>
         </div>

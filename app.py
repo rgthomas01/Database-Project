@@ -473,11 +473,12 @@ def update(dbEntity, data, formPrefillData=None):
         existingItems = [] # Default if dbEntity not Purchases
         if dbEntity == "purchases":
             # # JSON Version 
-            existingItems = mockData['purchasesItems']
+            existingItems1 = mockData['purchasesItems']
             # # SQL Version 
             query = "SELECT PurchaseItems.itemId, PurchaseItems.itemQuantity FROM PurchaseItems JOIN Purchases ON Purchases.purchaseId = PurchaseItems.purchaseId WHERE Purchases.purchaseId = %s;"
             cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(idValue,))
             results = cursor.fetchall()
+            existingItems = list(results)
 
         # Render the template, pre-populated with subject's existing information from db
         return render_template("createUpdate.j2", dbEntity=dbEntity, data=data, operation="update", updateRecord=updateRecord, existingItems=existingItems, formPrefillData=formPrefillData, updated=False)
@@ -493,8 +494,16 @@ def update(dbEntity, data, formPrefillData=None):
         updateStr = ""
         for key, val in colVals.items():
             # TODO Temporary bypass on PurchaseItems to get Purchases partially working
-            # ...need to do separate logic to update PurchaseItems
-            if dbEntity == "purchases" and 'item' in str(key) or 'item' in str(val):
+            # ...not quite there. 
+            if dbEntity == "purchases" and 'item' in str(key):
+                # if  'itemId' in str(key):
+                #     itemId = str(val)
+                # elif 'itemQuantity'in str(key):
+                #     itemQuantity = str(val)
+                #     query = "UPDATE PurchaseItems SET itemQuantity=%s WHERE purchaseId=%s AND 1=1;" 
+                #     print(query)
+                #     cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(itemQuantity,idValue, ))
+                #     results = cursor.fetchall()
                 pass
             else:
                 updateStr += (f"{str(key)}='{str(val)}', ")
