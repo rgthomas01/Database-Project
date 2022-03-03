@@ -18,6 +18,17 @@ CREATE TABLE `Customers` (
 INSERT INTO `Customers` (`customerId`, `customerFirstName`, `customerLastName`, `customerEmail`, `membershipStatus`) 
 VALUES (NULL, 'John', 'Smith ', 'johnsmith@aol.com', '1');
 
+INSERT INTO `Customers` (`customerId`, `customerFirstName`, `customerLastName`, `customerEmail`, `membershipStatus`) 
+VALUES (NULL, 'Fred', 'Flintstone ', 'yabadabadoo@yahoo.com', '1');
+
+INSERT INTO `Customers` (`customerId`, `customerFirstName`, `customerLastName`, `customerEmail`, `membershipStatus`) 
+VALUES (NULL, 'Barney', 'Rubble ', 'rubble@gmail.com', '0');
+
+INSERT INTO `Customers` (`customerId`, `customerFirstName`, `customerLastName`, `customerEmail`, `membershipStatus`) 
+VALUES (NULL, 'Wilma', 'Flintstone ', 'pebblesmom@yahoo.com', '1');
+
+INSERT INTO `Customers` (`customerId`, `customerFirstName`, `customerLastName`, `customerEmail`, `membershipStatus`) 
+VALUES (NULL, 'Betty', 'Rubble ', 'bambamsmom@gmail.com', '0');
 
 CREATE TABLE `Items` (
   `itemId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
@@ -30,13 +41,19 @@ CREATE TABLE `Items` (
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
 INSERT INTO `Items` (`itemId`, `itemName`, `itemPrice`, `itemDescription`, `itemType`, `inventoryOnHand`) 
-VALUES (NULL, 'Full Suspension Mountain Bike', '1599.99', 'goes up mountain and down', `Mountain Bike`, '21');
+VALUES (NULL, 'Full Suspension Mountain Bike', '1599.99', 'goes up mountain and down', 'Mountain Bike', '21');
 
 INSERT INTO `Items` (`itemId`, `itemName`, `itemPrice`, `itemDescription`, `itemType`, `inventoryOnHand`) 
-VALUES (NULL, 'Road Bike', '449', 'white with blue rims', `Road Bike`, '21');
+VALUES (NULL, 'Road Bike', '449.99', 'white with blue rims', 'Road Bike', '21');
 
-INSERT INTO `Items` (`itemId`, `itemName`, `itemPrice`, `itemDescription`, `inventoryOnHand`) 
-VALUES (NULL, 'Road Bike', '449', 'white with purple rims', `Road Bike`, '21');
+INSERT INTO `Items` (`itemId`, `itemName`, `itemPrice`, `itemDescription`, `itemType`,`inventoryOnHand`) 
+VALUES (NULL, 'Road Bike', '449.99', 'white with purple rims', 'Road Bike', '21');
+
+INSERT INTO `Items` (`itemId`, `itemName`, `itemPrice`, `itemDescription`, `itemType`,`inventoryOnHand`) 
+VALUES (NULL, 'Water Bottle Holder ', '15.99', 'Water bottle holder to mount to frame ', 'Accessory', '10');
+
+INSERT INTO `Items` (`itemId`, `itemName`, `itemPrice`, `itemDescription`, `itemType`, `inventoryOnHand`) 
+VALUES (NULL, '38 Cycling T-shirt ', '19.99', 'Unisex One Size 38 Cycles T-shirt','Apparel', '50');
 
 CREATE TABLE `Employees` (
   `eeId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
@@ -47,18 +64,20 @@ CREATE TABLE `Employees` (
   PRIMARY KEY (`eeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
-INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `employmentStatus`) 
+INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `eeStatus`) 
 VALUES (NULL, 'Paul', 'Bunion', 'floorManager', '1');
 
-INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `employmentStatus`) 
+INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `eeStatus`) 
 VALUES (NULL, 'Laura', 'Bunion', 'floorManager', '2');
 
-INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `employmentStatus`) 
-VALUES (NULL, 'John', 'Smith', 'salesClerk', '1');
+INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `eeStatus`) 
+VALUES (NULL, 'John', 'Smith', 'generalManager', '1');
 
-INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `employmentStatus`) 
-VALUES (NULL, 'John', 'Doe', 'salesClerk', '2');
+INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `eeStatus`) 
+VALUES (NULL, 'John', 'Doe', 'Mechanic', '2');
 
+INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `eeStatus`) 
+VALUES (NULL, 'George', 'Jetson', 'salesAssociate', '2');
 
 CREATE TABLE `Purchases` (
   `purchaseId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
@@ -77,6 +96,15 @@ CREATE TABLE `Purchases` (
 INSERT INTO `Purchases` (`purchaseId`, `customerId`, `purchaseDate`, `creditCardNumb`, `creditCardExp`, `costOfSale`, `eeId`) 
 VALUES (NULL, '28', '2022-02-18', '1111111111111111', '1111', '1599.99', '28');
 
+INSERT INTO `Purchases` (`purchaseId`, `customerId`, `purchaseDate`, `creditCardNumb`, `creditCardExp`, `costOfSale`, `eeId`) 
+VALUES (NULL, '29', '1995-12-24', '1111222233334444', '1197', '449.99', '32');
+
+INSERT INTO `Purchases` (`purchaseId`, `customerId`, `purchaseDate`, `creditCardNumb`, `creditCardExp`, `costOfSale`, `eeId`) 
+VALUES (NULL, '31', '1995-12-20', '4444333322221111', '0297', '449.99', '32');
+
+INSERT INTO `Purchases` (`purchaseId`, `customerId`, `purchaseDate`, `creditCardNumb`, `creditCardExp`, `costOfSale`, `eeId`) 
+VALUES (NULL, '32', '1995-12-20', '4444333322221111', '0297', '71.96', '32');
+
 
 CREATE TABLE `PurchaseItems` (
   `purchaseId` int(11) NOT NULL,
@@ -91,3 +119,16 @@ CREATE TABLE `PurchaseItems` (
 
 INSERT INTO `PurchaseItems` (`purchaseId`, `itemId`, `itemQuantity`)
  VALUES ('28', '28', '1');
+
+INSERT INTO `PurchaseItems` (`purchaseId`, `itemId`, `itemQuantity`)
+ VALUES ('29', '30', '1');
+
+INSERT INTO `PurchaseItems` (`purchaseId`, `itemId`, `itemQuantity`)
+ VALUES ('30', '29', '1');
+
+ INSERT INTO `PurchaseItems` (`purchaseId`, `itemId`, `itemQuantity`)
+ VALUES ('31', '31', '2');
+
+ INSERT INTO `PurchaseItems` (`purchaseId`, `itemId`, `itemQuantity`)
+ VALUES ('31', '32', '2');
+
