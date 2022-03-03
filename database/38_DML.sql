@@ -42,14 +42,14 @@ SELECT eeId, eeFirstName, eeLastName from Employees Where eeId = '%s' OR eeFirst
 
 /*Insert*/
 /*if blank value Null*/
-INSERT INTO Employees (eeId, eeFirstName, eeLastName,eePosition)
-Values (NULL, '%s','%s','%s');
+INSERT INTO Employees (eeId, eeFirstName, eeLastName,eePosition, employmentStatus)
+Values (NULL, '%s','%s','%s', '%s');
 
 
 /*Update*/  
 /*grab item passed to update by id */
 SELECT * FROM Employees WHERE eeId = '%s';
-UPDATE Employees SET eeFirstName = '%s', eeLastName = '%s', eePosition = '%s' WHERE eeId ='%s';
+UPDATE Employees SET eeFirstName = '%s' eeLastName = '%s' eePosition = '%s' employmentStatus = '%' WHERE eeId ='%s';
 
 /*Delete*/
 DELETE FROM Employees WHERE eeId = '%';

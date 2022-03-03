@@ -79,6 +79,10 @@ def employeeRetrieve():
             if request.args['eeLastName'] != '':
                 eeLastName = request.args['eeLastName']
                 param_list.append(eeLastName)
+            if request.args['employementStatus'] != '':
+                employementStatus = request.args['employementStatus']
+                param_list.append(employementStatus)
+
 
             #build string to use after WHERE clause
             q_string = ''
@@ -170,9 +174,10 @@ def employeesCreate():
         eeFirstName = request.form["eeFirstName"]
         eeLastName= request.form["eeLastName"]
         eePosition = request.form["eePosition"]
+        employementStatus = request.form['employmentStatus']
 
-        query = "INSERT INTO Employees (eeId, eeFirstName, eeLastName,eePosition) VALUES (NULL, %s,%s,%s);"
-        cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (eeFirstName,eeLastName, eePosition, ))       
+        query = "INSERT INTO Employees (eeId, eeFirstName, eeLastName,eePosition, employmentStatus) VALUES (NULL, %s,%s,%s, %s);"
+        cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (eeFirstName,eeLastName, eePosition, employementStatus, ))       
         results = (cursor.fetchall())
 
     return create(dbEntity)
