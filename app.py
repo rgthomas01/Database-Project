@@ -82,7 +82,11 @@ def employeeRetrieve():
                 paramList.append(eeFirstName)
             if request.args['eeLastName'] != '':
                 eeLastName = request.args['eeLastName']
-                paramList.append(eeLastName)
+                param_list.append(eeLastName)
+            if request.args['employementStatus'] != '':
+                employementStatus = request.args['employementStatus']
+                param_list.append(employementStatus)
+
 
             #build string to use after WHERE clause
             selectStr = ''

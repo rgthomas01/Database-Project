@@ -29,8 +29,14 @@ CREATE TABLE `Items` (
   PRIMARY KEY (`itemId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
+INSERT INTO `Items` (`itemId`, `itemName`, `itemPrice`, `itemDescription`, `itemType`, `inventoryOnHand`) 
+VALUES (NULL, 'Full Suspension Mountain Bike', '1599.99', 'goes up mountain and down', `Mountain Bike`, '21');
+
+INSERT INTO `Items` (`itemId`, `itemName`, `itemPrice`, `itemDescription`, `itemType`, `inventoryOnHand`) 
+VALUES (NULL, 'Road Bike', '449', 'white with blue rims', `Road Bike`, '21');
+
 INSERT INTO `Items` (`itemId`, `itemName`, `itemPrice`, `itemDescription`, `inventoryOnHand`) 
-VALUES (NULL, 'Full Suspension Mountain Bike', '1599.99', 'goes up mountain and down', '21');
+VALUES (NULL, 'Road Bike', '449', 'white with purple rims', `Road Bike`, '21');
 
 CREATE TABLE `Employees` (
   `eeId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
@@ -41,8 +47,18 @@ CREATE TABLE `Employees` (
   PRIMARY KEY (`eeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
-INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `eeStatus`) 
+INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `employmentStatus`) 
 VALUES (NULL, 'Paul', 'Bunion', 'floorManager', '1');
+
+INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `employmentStatus`) 
+VALUES (NULL, 'Laura', 'Bunion', 'floorManager', '2');
+
+INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `employmentStatus`) 
+VALUES (NULL, 'John', 'Smith', 'salesClerk', '1');
+
+INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `employmentStatus`) 
+VALUES (NULL, 'John', 'Doe', 'salesClerk', '2');
+
 
 CREATE TABLE `Purchases` (
   `purchaseId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
