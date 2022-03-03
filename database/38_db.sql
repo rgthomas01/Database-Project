@@ -84,8 +84,8 @@ CREATE TABLE `Purchases` (
   `customerId` int(11) NOT NULL,
   `purchaseDate`date NOT NULL,
   `creditCardNumb` varchar(19) NOT NULL,
-  `creditCardExp` varchar(4),
-  `costOfSale` decimal(6,2),
+  `creditCardExp` varchar(4) NOT NULL,
+  `costOfSale` decimal(6,2) NOT NULL,
   `eeId` int(11),
   FOREIGN KEY (`customerId`)
   REFERENCES Customers (`customerId`),
