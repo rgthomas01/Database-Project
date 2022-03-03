@@ -219,11 +219,26 @@
                 {% for row in data %}
                   <tr>
                     {% for key in row.keys() %}
+                      {# Convert specific values #}
+                      {% if key == "eeStatus" %}
+                        {% if row[key] == 1%}
+                           <td>Current</td>
+                        {% elif row[key] == 2%}
+                          <td>Former</td>
+                        {% endif %}
+                      {% elif key == "membershipStatus" %}
+                        {% if row[key] == 1%}
+                           <td>Yes</td>
+                        {% elif row[key] == 0%}
+                          <td>No</td>
+                        {% endif %}
+                      {% else %}
                       <td>{{row[key]}}</td>
+                      {% endif %}
                     {% endfor %}
                     <td>
                       <form method="GET" action="{{dbEntity}}/update">
-                        <!-- Note: <input> takes the first key/val from row dict, which should be entity ID-->
+                        {# Note: <input> takes the first key/val from row dict, which should be entity ID #}
                         <input type="hidden" name="{{row.keys() | first}}" value="{{row.values() | first}}"> 
                         <a onclick="this.parentNode.submit();" class="btn btn-sm btn-outline-secondary">update</a>
                       </form>
