@@ -75,6 +75,16 @@
               </div>
             </div>
             <div class="form-row">
+              <div class="col-5">
+              {# TODO: Switch this to 'disabled' when we update logic in app.py #}
+              <select class="custom-select" name="eeStatus" id="eeStatus">
+                  <option value="" selected>Is employee current or former?</option>
+                  <option value="1">Current</option>
+                  <option value="0">Former</option>
+              </select> 
+              </div>
+            </div>
+            <div class="form-row">
             {{ searchButton }}
             </div>
           </form>

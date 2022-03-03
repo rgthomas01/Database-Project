@@ -73,7 +73,7 @@ def employeeRetrieve():
         else:
             paramList = []
             
-            #catch non empty params and add them to a param_list to be used as query_params
+            #catch non empty params and add them to a paramList to be used as query_params
             if request.args['eeId'] != '':
                 eeId = request.args['eeId']
                 paramList.append(eeId)
@@ -82,10 +82,10 @@ def employeeRetrieve():
                 paramList.append(eeFirstName)
             if request.args['eeLastName'] != '':
                 eeLastName = request.args['eeLastName']
-                param_list.append(eeLastName)
-            if request.args['employementStatus'] != '':
-                employementStatus = request.args['employementStatus']
-                param_list.append(employementStatus)
+                paramList.append(eeLastName)
+            if request.args['eeStatus'] != '':
+                eeStatus = request.args['eeStatus']
+                paramList.append(eeStatus)
 
 
             #build string to use after WHERE clause
@@ -132,7 +132,7 @@ def customerRetrieve():
         else:
             paramList = []
             
-            #catch non empty params and add them to a param_list to be used as query_params
+            #catch non empty params and add them to a paramList to be used as query_params
             if request.args['customerId'] != '':
                 customerId = request.args['customerId']
                 paramList.append(customerId)
@@ -191,7 +191,7 @@ def purchasesRetrieve():
             paramList = []
     
 
-            #catch non empty params and add them to a param_list to be used as query_params
+            #catch non empty params and add them to a paramList to be used as query_params
             if request.args['purchaseDate'] != '':
                 purchaseDate = request.args['purchaseDate']
                 paramList.append(purchaseDate)
@@ -248,7 +248,7 @@ def itemsRetrieve():
             paramList = []
     
 
-            #catch non empty params and add them to a param_list to be used as query_params
+            #catch non empty params and add them to a paramList to be used as query_params
             if request.args['itemId'] != '':
                 itemId = request.args['itemId']
                 paramList.append(itemId)
