@@ -315,9 +315,10 @@ def employeesCreate():
         eeFirstName = request.form["eeFirstName"]
         eeLastName= request.form["eeLastName"]
         eePosition = request.form["eePosition"]
+        eeStatus = request.form["eeStatus"]
 
-        query = "INSERT INTO Employees (eeId, eeFirstName, eeLastName,eePosition) VALUES (NULL, %s,%s,%s);"
-        cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (eeFirstName,eeLastName, eePosition, ))       
+        query = "INSERT INTO Employees (eeId, eeFirstName, eeLastName,eePosition,eeStatus) VALUES (NULL, %s,%s,%s,%s);"
+        cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (eeFirstName,eeLastName, eePosition, eeStatus ))       
         results = (cursor.fetchall())
 
     return create(dbEntity)

@@ -53,15 +53,15 @@ Select * FROM Employees;
 SELECT eeId, eeFirstName, eeLastName from Employees Where eeId = '%s' AND eeFirstName='%s' AND eeLastName='%s';
 
 /***********CREATE***********/
-INSERT INTO Employees (eeId, eeFirstName, eeLastName,eePosition)
-Values (NULL, '%s','%s','%s');
+INSERT INTO Employees (eeId, eeFirstName, eeLastName,eePosition,eeStatus)
+Values (NULL, '%s','%s','%s','%s');
 
 
 /***********UPDATE***********/  
 /*grab item passed to update by id */
 SELECT * FROM Employees WHERE eeId = '%s';
 /*then Update*/
-UPDATE Employees SET eeFirstName = '%s', eeLastName = '%s', eePosition = '%s' WHERE eeId ='%s';
+UPDATE Employees SET eeFirstName = '%s', eeLastName = '%s', eePosition = '%s', eeStatus = '%s' WHERE eeId ='%s';
 
 /***********DELETE ***********/
 /*Replace eeId with Null in all Purchases ee is affiliated with */

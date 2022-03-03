@@ -37,11 +37,12 @@ CREATE TABLE `Employees` (
   `eeFirstName` varchar(35) NOT NULL,
   `eeLastName` varchar(35) NOT NULL,
   `eePosition` varchar(35) NOT NULL,
+  `eeStatus`  tinyint(1) NOT NULL,
   PRIMARY KEY (`eeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
-INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`) 
-VALUES (NULL, 'Paul', 'Bunion', 'floorManager');
+INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `eeStatus`) 
+VALUES (NULL, 'Paul', 'Bunion', 'floorManager', '1');
 
 CREATE TABLE `Purchases` (
   `purchaseId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
