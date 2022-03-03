@@ -74,11 +74,19 @@
         <div class="col-5">
         <label for="eePosition">Employee position</label>
         <select class="custom-select" name="eePosition" id="eePosition" required>
-            <option value="">Choose position</option>
+            <option value="" disabled selected>Choose position</option>
             <option value="salesAssociate">Sales Associate</option>
             <option value="floorManager">Floor Manager</option>
             <option value="mechanic">Mechanic</option>
             <option value="generalManager">General Manager</option>
+        </select> 
+        </div>
+        <div class="col-5">
+        <label for="eeStatus">Employment status</label>
+        <select class="custom-select" name="eeStatus" id="eeStatus" required>
+            <option value="" disabled selected>Is employee current or former?</option>
+            <option value="1">Current</option>
+            <option value="0">Former</option>
         </select> 
         </div>
     </div>
@@ -151,7 +159,7 @@
 </form>
 {% endset %}
 
-{#  2.3 Create / Update purchases form --!> 
+{#  2.3 Create / Update purchases form #} 
 {# ---------------------------------------------- #}
 {% set createUpdatePurchasesForm %}
 {#  Pre-fill values when called to update  #}
@@ -256,7 +264,7 @@
 </form>
 {% endset %}
 
-{#  2.4 Create / Update items form --!> 
+{#  2.4 Create / Update items form #} 
 {# ---------------------------------------------- #}
 {% set createUpdateItemsForm %}
     {#  Pre-fill values when called to update  #}

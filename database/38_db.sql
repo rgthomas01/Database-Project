@@ -43,7 +43,7 @@ CREATE TABLE `Employees` (
   `eeFirstName` varchar(35) NOT NULL,
   `eeLastName` varchar(35) NOT NULL,
   `eePosition` varchar(35) NOT NULL,
-  `employmentStatus` tinyint(1) NOT NULL,
+  `eeStatus`  tinyint(1) NOT NULL,
   PRIMARY KEY (`eeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
@@ -82,9 +82,10 @@ CREATE TABLE `PurchaseItems` (
   `purchaseId` int(11) NOT NULL,
   `itemId` int(11) NOT NULL,
   `itemQuantity` int(3) NOT NULL,
-  FOREIGN KEY (`purchaseId`)
+  PRIMARY KEY (`purchaseId`, `itemId`),
+  CONSTRAINT `PurchaseItems_ibfk_1` FOREIGN KEY (`purchaseId`)
   REFERENCES Purchases (`purchaseId`),
-  FOREIGN KEY (`itemId`)
+  CONSTRAINT `PurchaseItems_ibfk_2`FOREIGN KEY (`itemId`)
   REFERENCES Items (`itemId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 

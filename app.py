@@ -4,6 +4,7 @@ from flask import request
 import os
 import database.db_connector as db
 import json
+import itertools
 
 app = Flask(__name__)
 
@@ -16,7 +17,7 @@ app = Flask(__name__)
 # app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 
-db_connection = db.connect_to_database()
+#db_connection = db.connect_to_database()
 mysql = MySQL(app)
 
 # ------------------------------DATA------------------------------
@@ -30,13 +31,16 @@ with open('data/mockData.json', 'r+') as infile:
 
 @app.route('/',methods=["GET"])
 def main():
+    db_connection = db.connect_to_database()
     if request.method == "GET": 
             return render_template("main.j2")
 
 # ------------------------------RETRIEVE------------------------------
 
 def retrieve(dbEntity, data):
-    # RETRIEVE - landing page / retrieve results 
+    #test comment for branching 2
+    # RETRIEVE - landing page / retrieve results
+    db_connection = db.connect_to_database() 
     if request.method == "GET": 
 
         # Landing page for search - take non-query URL request to /<dbEntity>
@@ -50,7 +54,7 @@ def retrieve(dbEntity, data):
 
 @app.route('/employees',methods=["GET", "POST"])
 def employeeRetrieve():
-
+    db_connection = db.connect_to_database()
     dbEntity = "employees"
 
     #get arguements from Get Request
@@ -67,15 +71,15 @@ def employeeRetrieve():
             return retrieve(dbEntity, data= results)
 
         else:
-            param_list = []
+            paramList = []
             
-            #catch non empty params and add them to a param_list to be used as quer_param
+            #catch non empty params and add them to a param_list to be used as query_params
             if request.args['eeId'] != '':
                 eeId = request.args['eeId']
-                param_list.append(eeId)
+                paramList.append(eeId)
             if request.args["eeFirstName"] != '':
                 eeFirstName = request.args['eeFirstName']
-                param_list.append(eeFirstName)
+                paramList.append(eeFirstName)
             if request.args['eeLastName'] != '':
                 eeLastName = request.args['eeLastName']
                 param_list.append(eeLastName)
@@ -85,16 +89,16 @@ def employeeRetrieve():
 
 
             #build string to use after WHERE clause
-            q_string = ''
+            selectStr = ''
             for i in request.args.keys():
                 if request.args[i] != '':
                     
-                    if len(q_string)>0:
-                        q_string = q_string +" OR "
-                    q_string = q_string + i + " = %s"
+                    if len(selectStr)>0:
+                        selectStr = selectStr +" AND "
+                    selectStr = selectStr + i + " = %s"
             
-            query =  "Select * FROM Employees WHERE " + q_string + ";" 
-            cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(param_list, ))
+            query =  "Select * FROM Employees WHERE " + selectStr +";   " 
+            cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
             results = (cursor.fetchall())
             
             if len(results)==0:
@@ -111,37 +115,176 @@ def employeeRetrieve():
 
 @app.route('/customers',methods=["GET", "POST"])
 def customerRetrieve():
+    db_connection = db.connect_to_database()
     dbEntity = "customers"
 
-    if request.method == "GET":
+    #get arguements from Get Request
+    retrieveRecord = [i for i in request.args.items()]
+
+    if request.method == "GET" and len(retrieveRecord)>0:
+        
+        if 'retrieveAll' in request.args.keys(): #if retrieve all 
+            query = "Select * FROM Customers;"
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            results = (cursor.fetchall())
+            return retrieve(dbEntity, data=results)
+        
+        else:
+            paramList = []
+            
+            #catch non empty params and add them to a param_list to be used as query_params
+            if request.args['customerId'] != '':
+                customerId = request.args['customerId']
+                paramList.append(customerId)
+            if request.args["customerFirstName"] != '':
+                customerFirstName = request.args['customerFirstName']
+                paramList.append(customerFirstName)
+            if request.args['customerLastName'] != '':
+                customerLastName = request.args['customerLastName']
+                paramList.append(customerLastName)
+            if request.args['customerEmail'] != '':
+                customerEmail = request.args['customerEmail']
+                paramList.append(customerEmail)
+
+            #build string to use after WHERE clause
+            selectStr = ''
+            for i in request.args.keys():
+                if request.args[i] != '':
+                    
+                    if len(selectStr)>0:
+                        selectStr = selectStr +" OR "
+                    selectStr = selectStr + i + " = %s"
+            
+            query =  "Select * FROM Customers WHERE " + selectStr +  ";" 
+            cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
+            results = (cursor.fetchall())
+            
+            if len(results)==0:
+                results = None
+            return retrieve(dbEntity, data= results)
+
+        
+    else:
         query = "Select * FROM Customers;"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = (cursor.fetchall())
         return retrieve(dbEntity, data=results)
-    
 
 
 @app.route('/purchases',methods=["GET", "POST"])
 def purchasesRetrieve():
+    db_connection = db.connect_to_database()
 
     dbEntity = "purchases"
 
-    if request.method == "GET":
-        query = "Select * FROM Purchases;"
+    retrieveRecord = [i for i in request.args.items()]
+
+    if request.method == "GET" and len(retrieveRecord)>0:
+        
+        if 'retrieveAll' in request.args.keys(): #if retrieve all 
+            query = "Select * FROM Purchases;"
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            results = (cursor.fetchall())
+            return retrieve(dbEntity, data=results)
+        
+        else:
+            paramList = []
+    
+
+            #catch non empty params and add them to a param_list to be used as query_params
+            if request.args['purchaseDate'] != '':
+                purchaseDate = request.args['purchaseDate']
+                paramList.append(purchaseDate)
+            if request.args["purchaseId"] != '':
+                purchaseId = request.args['purchaseId']
+                paramList.append(purchaseId)
+            if request.args['customerId'] != '':
+                customerId = request.args['customerId']
+                paramList.append(customerId)
+            if request.args['eeId'] != '':
+                eeId = request.args['eeId']
+                paramList.append(eeId)
+
+            #build string to use after WHERE clause
+            selectStr = ''
+            for i in request.args.keys():
+                if request.args[i] != '':
+                    
+                    if len(selectStr)>0:
+                        selectStr = selectStr +" OR "
+                    selectStr = selectStr + i + " = %s"
+
+            query =  "Select * FROM Purchases WHERE " + selectStr +  ";" 
+            cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
+            results = (cursor.fetchall())
+            
+            if len(results)==0:
+                results = None
+            return retrieve(dbEntity, data= results)
+
+        
+    else:
+        query = "Select * FROM Customers;"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = (cursor.fetchall())
         return retrieve(dbEntity, data=results)
 
 @app.route('/items',methods=["GET", "POST"])
 def itemsRetrieve():
-
+    db_connection = db.connect_to_database()
     dbEntity = "items"
 
-    if request.method == "GET":
+    retrieveRecord = [i for i in request.args.items()]
+
+    if request.method == "GET" and len(retrieveRecord)>0:
+        
+        if 'retrieveAll' in request.args.keys(): #if retrieve all 
+            query = "Select * FROM Items;"
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            results = (cursor.fetchall())
+            return retrieve(dbEntity, data=results)
+        
+        else:
+            paramList = []
+    
+
+            #catch non empty params and add them to a param_list to be used as query_params
+            if request.args['itemId'] != '':
+                itemId = request.args['itemId']
+                paramList.append(itemId)
+            if request.args["itemName"] != '':
+                itemName = request.args['itemName']
+                paramList.append(itemName)
+            if request.args['itemPrice'] != '':
+                itemPrice = request.args['itemPrice']
+                paramList.append(itemPrice)
+            if request.args['itemType'] != '':
+                itemType = request.args['itemType']
+                paramList.append(itemType)
+
+            #build string to use after WHERE clause
+            selectStr = ''
+            for i in request.args.keys():
+                if request.args[i] != '':
+                    
+                    if len(selectStr)>0:
+                        selectStr = selectStr +" OR "
+                    selectStr = selectStr + i + " = %s"
+
+            query =  "Select * FROM Items WHERE " + selectStr +  ";" 
+            cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
+            results = (cursor.fetchall())
+            
+            if len(results)==0:
+                results = None
+            return retrieve(dbEntity, data= results)
+
+        
+    else:
         query = "Select * FROM Items;"
         cursor = db.execute_query(db_connection=db_connection, query=query)
         results = (cursor.fetchall())
-        return retrieve(dbEntity, data= results)
+        return retrieve(dbEntity, data=results)
 
 
 # ------------------------------CREATE------------------------------
@@ -153,6 +296,7 @@ def create(dbEntity, formPrefillData=None):
         dbEntity -- corresponds to table in the databae, e.g., Employees
         formPrefill -- to pre-populate UI form with existing database values, e.g., eeIds, customerIds
     """
+    db_connection = db.connect_to_database()
 
    # Blank form to create 
     if request.method == "GET":
@@ -168,22 +312,24 @@ def create(dbEntity, formPrefillData=None):
 
 @app.route('/employees/create',methods=["GET", "POST"])
 def employeesCreate():
+    db_connection = db.connect_to_database()
 
     dbEntity = "employees"
     if request.method == "POST":
         eeFirstName = request.form["eeFirstName"]
         eeLastName= request.form["eeLastName"]
         eePosition = request.form["eePosition"]
-        employementStatus = request.form['employmentStatus']
+        eeStatus = request.form["eeStatus"]
 
-        query = "INSERT INTO Employees (eeId, eeFirstName, eeLastName,eePosition, employmentStatus) VALUES (NULL, %s,%s,%s, %s);"
-        cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (eeFirstName,eeLastName, eePosition, employementStatus, ))       
+        query = "INSERT INTO Employees (eeId, eeFirstName, eeLastName,eePosition,eeStatus) VALUES (NULL, %s,%s,%s,%s);"
+        cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (eeFirstName,eeLastName, eePosition, eeStatus ))       
         results = (cursor.fetchall())
 
     return create(dbEntity)
 
 @app.route('/customers/create',methods=["GET", "POST"])
 def customersCreate():
+    db_connection = db.connect_to_database()
 
     dbEntity = "customers"
     if request.method == "POST":
@@ -210,6 +356,7 @@ def customersCreate():
 
 @app.route('/purchases/create',methods=["GET", "POST"])
 def purchasesCreate():
+    db_connection = db.connect_to_database()
 
     dbEntity = "purchases"
 
@@ -286,7 +433,8 @@ def purchasesCreate():
 
 @app.route('/items/create',methods=["GET", "POST"])
 def itemsCreate():
-    
+    db_connection = db.connect_to_database()
+
 
     dbEntity = "items"
     if request.method == "POST":
@@ -307,7 +455,7 @@ def itemsCreate():
 # ------------------------------UPDATE------------------------------
 
 def update(dbEntity, data, formPrefillData=None):
-
+    db_connection = db.connect_to_database()
     # GET will initially show a form filled with existing data. 
     if request.method == "GET":
         # Parse incoming request to get the key:value of dbEntity id (e.g., 'eeId':'123', 'purchaseId':'456')
@@ -362,6 +510,7 @@ def update(dbEntity, data, formPrefillData=None):
 
 @app.route('/employees/update',methods=["GET", "POST"])
 def employeesUpdate():
+    db_connection = db.connect_to_database()
 
     dbEntity = "employees"
     # JSON Version 
@@ -373,6 +522,7 @@ def employeesUpdate():
 
 @app.route('/customers/update',methods=["GET", "POST"])
 def customersUpdate():
+    db_connection = db.connect_to_database()
 
     dbEntity = "customers"
     # JSON Version 
@@ -385,6 +535,7 @@ def customersUpdate():
 
 @app.route('/purchases/update',methods=["GET", "POST"])
 def purchasesUpdate():
+    db_connection = db.connect_to_database()
 
     # Declare the dbEntity
     dbEntity = "purchases"
@@ -421,6 +572,7 @@ def purchasesUpdate():
 
 @app.route('/items/update',methods=["GET", "POST"])
 def itemsUpdate():
+    db_connection = db.connect_to_database()
 
     dbEntity = "items"
     # JSON Version 
@@ -433,7 +585,8 @@ def itemsUpdate():
 # ------------------------------DELETE------------------------------
 
 def delete(dbEntity,data):
-        
+    db_connection = db.connect_to_database()
+ 
     if request.method == "GET":
         deleteRecord = [i for i in request.args.items()]
         # Parse incoming request to get id attribute name (e.g., 'eeId', 'purchaseId') and its value
@@ -456,7 +609,7 @@ def delete(dbEntity,data):
         query = "SELECT * FROM Employees WHERE eeId = %s " 
         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(eeId, ))       
         deleteRecord = (cursor.fetchall())
-
+        
         #Still need to run actual delete query. Convert select to dict to populated sucessfuly deleted from 
         #Then run delete query
         #https://stackoverflow.com/questions/28755505/how-to-convert-sql-query-results-into-a-python-dictionary
@@ -467,36 +620,44 @@ def delete(dbEntity,data):
         return render_template("delete.j2", dbEntity=dbEntity, data=(deleteRecord), operation="delete",deleteRecord=deleteRecord, deleted=True) 
 
 
-@app.route('/employees/delete',methods=["GET", "POST"])
-def employeesDelete():
+# @app.route('/employees/delete',methods=["GET", "POST"])
+# def employeesDelete():
+#     db_connection = db.connect_to_database()
 
-    dbEntity = "employees"
+#     dbEntity = "employees"
 
-    if request.method == "GET":
-        eeId = request.args['eeId']
+#     if request.method == "GET":
+#         eeId = request.args['eeId']
+
+#         query = "SELECT * FROM Employees WHERE eeId = %s " 
+#         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(eeId, ))       
+#         data = (cursor.fetchall())
+
         
-        
-        query = "SELECT * FROM Employees WHERE eeId = %s " 
-        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(eeId, ))       
-        data = (cursor.fetchall())
+#     #data = mockData['employees']
 
-
-    #data = mockData['employees']
-
-        return delete(dbEntity, data)
+#         return delete(dbEntity, data)
     
-    if request.method == "POST":
-        confirmDelete= request.form
-        data =(confirmDelete.getlist('confirmDelete'))
-        
-        
-        return delete(dbEntity, data)
+#     if request.method == "POST":
+#         entityId= request.form['confirmDelete']
+
+#         #to populate 
+#         query = "SELECT * FROM Employees WHERE eeId = %s " 
+#         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(entityId, ))       
+#         data = cursor.fetchall()
+
+#         query2 = "DELETE FROM Employees WHERE eeId = %s"
+#         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(entityId, ))       
+#         data = cursor.fetchall()
+
+#         return delete(dbEntity, data)
 
 
 
 
 @app.route('/customers/delete',methods=["GET", "POST"])
 def customersDelete():
+    db_connection = db.connect_to_database()
 
     dbEntity = "customers"
     data = mockData['customers']
@@ -506,6 +667,7 @@ def customersDelete():
 
 @app.route('/purchases/delete',methods=["GET", "POST"])
 def purchasesDelete():
+    db_connection = db.connect_to_database()
 
     dbEntity = "purchases"
     data = mockData['purchases']
@@ -515,6 +677,7 @@ def purchasesDelete():
 
 @app.route('/items/delete',methods=["GET", "POST"])
 def itemsDelete():
+    db_connection = db.connect_to_database()
 
     dbEntity = "items"
     data = mockData['items']

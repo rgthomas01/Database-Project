@@ -210,7 +210,9 @@
                   <th>{{col}}</th>
                   {% endfor %}
                   <th>Modify</th>
+                  {% if dbEntity != "employees" %}
                   <th>Delete</th>
+                  {% endif %}
                 </tr>
               </thead>
               <tbody>               
@@ -226,12 +228,14 @@
                         <a onclick="this.parentNode.submit();" class="btn btn-sm btn-outline-secondary">update</a>
                       </form>
                     </td>
+                    {% if dbEntity != "employees" %}
                     <td>
                       <form method="GET" action="{{dbEntity}}/delete">
                         <input type="hidden" name="{{row.keys() | first}}" value="{{row.values() | first}}"> 
                         <a onclick="this.parentNode.submit();" class="btn btn-sm btn-outline-danger">delete</a>
                       </form>
                     </td>
+                    {% endif %}
                   </tr>
                 {% endfor %}
               </tbody>
