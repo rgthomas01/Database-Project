@@ -3,29 +3,13 @@ from flask_mysqldb import MySQL
 from flask import request
 import os
 import database.db_connector as db
-import json
 import itertools
 
 app = Flask(__name__)
 
 # ------------------------------SQL CONNECTION------------------------------
 
-# app.config['MYSQL_HOST'] = 'classmysql.engr.oregonstate.edu'
-# app.config['MYSQL_USER'] = 'cs340_bushjam'
-# app.config['MYSQL_PASSWORD'] = '####' #last 4 of onid
-# app.config['MYSQL_DB'] = 'cs340_bushjam'
-# app.config['MYSQL_CURSORCLASS'] = "DictCursor"
-
-
-#db_connection = db.connect_to_database()
 mysql = MySQL(app)
-
-# ------------------------------DATA------------------------------
-
-with open('data/mockData.json', 'r+') as infile:
-    mockData = json.load(infile)
-
-
 
 # ------------------------------MAIN------------------------------
 
@@ -472,8 +456,6 @@ def update(dbEntity, data, formPrefillData=None):
         # Specific to Purchases, pull associated PurchaseItems
         existingItems = [] # Default if dbEntity not Purchases
         if dbEntity == "purchases":
-            # # JSON Version 
-            existingItems1 = mockData['purchasesItems']
             # # SQL Version 
             query = "SELECT PurchaseItems.itemId, PurchaseItems.itemQuantity FROM PurchaseItems JOIN Purchases ON Purchases.purchaseId = PurchaseItems.purchaseId WHERE Purchases.purchaseId = %s;"
             cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(idValue,))
@@ -523,7 +505,7 @@ def employeesUpdate():
 
     dbEntity = "employees"
     # JSON Version 
-    data = mockData['employees']
+    data = None
 
     # SQL Version 
     return update(dbEntity, data)
@@ -535,7 +517,7 @@ def customersUpdate():
 
     dbEntity = "customers"
     # JSON Version 
-    data = mockData['customers']
+    data = None
 
     # SQL Version 
     return update(dbEntity, data)
@@ -568,7 +550,7 @@ def purchasesUpdate():
         
 
     # JSON Version 
-    data = mockData['purchases']
+    data = None
 
     # SQL Version 
 
@@ -585,7 +567,7 @@ def itemsUpdate():
 
     dbEntity = "items"
     # JSON Version 
-    data = mockData['items']
+    data = None
 
     # SQL Version 
     return update(dbEntity, data)
