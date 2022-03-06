@@ -26,14 +26,14 @@
     {% if operation == "update" %}
         {% if updated == False %}
             <script>
-            function loadExistingItems(){addFields({{existingItems}},{{formPrefillData['itemIds']}})};
+            function loadExistingItems(){addFields({{existingItems}},{{formPrefillData['inventoryItems']}})};
             window.onload=loadExistingItems;
             </script>
         {% endif %}
     {% endif %}
     <div class="form-row">
         <div class="col-3">
-            <button type="button" class="btn btn-outline-primary" id="addItems" onclick="addFields(0,{{formPrefillData['itemIds']}})" style:"min-width: 200px">Add items</a>
+            <button type="button" class="btn btn-outline-primary" id="addItems" onclick="addFields(0,{{formPrefillData['inventoryItems']}})" style:"min-width: 200px">Add items</a>
         </div>
         <div class="col-3">
             <a href="" onClick="window.location.reload(true)" class="btn btn-outline-danger" id="addStartOver" style:"min-width: 200px">Start Over</a>

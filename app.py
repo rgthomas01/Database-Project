@@ -344,7 +344,7 @@ def purchasesCreate():
 
     dbEntity = "purchases"
 
-
+    # formPrefilData is passed to the template
     formPrefillData = {'eeIds':[],'customerIds':[]}
     # Get eeId values 
     query = "SELECT eeId FROM Employees;"
@@ -354,18 +354,13 @@ def purchasesCreate():
     query = "SELECT customerId FROM Customers;"
     cursor = db.execute_query(db_connection=db_connection, query=query)
     formPrefillData['customerIds'] = cursor.fetchall()
-    # Get itemId values 
-    query = "SELECT itemId FROM Items;"
+    # Get itemId, inventoryOnHand values 
+    query = "SELECT itemId, inventoryOnHand FROM Items;"
     cursor = db.execute_query(db_connection=db_connection, query=query)
-    formPrefillData['itemIds'] = [i['itemId'] for i in cursor.fetchall()] #list > template > js array
-    
-    
-    #LEFT OFF HERE - 
-    # formPrefilData is passed to the template
-    # {{formPrefillData['itemIds']}} to access the itemIds
+    # {{formPrefillData['inventoryItems']}} to access a dict of key:val pairs: {itemIds:inventoryOnHand}
     # pass those through when the template calls addItems.js
-    # create parameters/logic in addItems to take itemIds and put them in the fields
-        # requires do selct that pre-selects based on whether update or create
+    formPrefillData['inventoryItems'] = { str(i['itemId']):int(i['inventoryOnHand']) for i in cursor.fetchall()} #list > template > js array
+
 
     # Get eeId and customerId data to populate formPrefillData
     if request.method == "GET":
@@ -541,11 +536,18 @@ def purchasesUpdate():
     query = "SELECT customerId FROM Customers;"
     cursor = db.execute_query(db_connection=db_connection, query=query)
     formPrefillData['customerIds'] = cursor.fetchall()
-    # Get itemId values 
-    query = "SELECT itemId FROM Items;"
+    # # Get itemId values 
+    # query = "SELECT itemId FROM Items;"
+    # cursor = db.execute_query(db_connection=db_connection, query=query)
+    # formPrefillData['itemIds'] = [i['itemId'] for i in cursor.fetchall()] #list > template > js array
+    # NEW 220306
+    # Get itemId, inventoryOnHand values 
+    query = "SELECT itemId, inventoryOnHand FROM Items;"
     cursor = db.execute_query(db_connection=db_connection, query=query)
-    formPrefillData['itemIds'] = [i['itemId'] for i in cursor.fetchall()] #list > template > js array
-    
+    # {{formPrefillData['inventoryItems']}} to access a dict of key:val pairs: {itemIds:inventoryOnHand}
+    # pass those through when the template calls addItems.js
+    formPrefillData['inventoryItems'] = { str(i['itemId']):int(i['inventoryOnHand']) for i in cursor.fetchall()} #list > template > js array
+
     
         
 

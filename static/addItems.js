@@ -1,14 +1,23 @@
-function addFieldsHelper(itemIdVal = null, itemQuantityVal = null, inventoryItemIds = null) {
+function addFieldsHelper(itemIdVal = null, itemQuantityVal = null, inventoryItems = null) {
     /*  itemIdVal: corresponds to Item.itemId for existing PurchaseItem
     *   itemQuantityVal: corresponds to Item.itemId for existing PurchaseItem
-    *   inventoryItemIds: itemId values to pre-fill form with data
-    */  
+    *   inventoryItems: itemId values to pre-fill form with data
+    */
 
     // itemsContainer where item lines will be dynamically generated
     let itemsContainer = document.getElementById("itemsContainer");
 
     // Determine number of existing rows for naming subsequent rows 
     let itemNum = itemsContainer.getElementsByClassName('form-row').length
+
+    // If previous itemId select was not filled, do nothing and display prompt:
+    if (itemNum > 0) {
+        let pvsItemIdVal = document.getElementById('itemId' + (itemNum).toString())
+        if (pvsItemIdVal.value === "") {
+            alert("Select Item ID and Quantity prior to adding row")
+            return
+        };
+    };
 
     // Find any previous form submit button and remove 
     if (document.getElementById('submitButton') !== null) {
@@ -32,22 +41,11 @@ function addFieldsHelper(itemIdVal = null, itemQuantityVal = null, inventoryItem
     let rowCol1 = document.createElement("div")
     rowCol1.className = "col-2";
 
-    // Create input for itemId field - OLD - replacd with select below 
-    // let itemId = document.createElement("input");
-    // itemId.type = "text";
-    // itemId.className = "form-control";
-    // itemId.name = "itemId" + (itemNum+1);
-    // if (itemIdVal === null){
-    //     itemId.placeholder = "Item ID";
-    // } else {
-    //     itemId.value = itemIdVal;
-    // }
-    // itemId.required = true;
-
     // Create select dropdown for itemId field pre-populated with items in inventory
     let itemId = document.createElement("select");
     itemId.className = "form-control";
     itemId.name = "itemId" + (itemNum + 1);
+    itemId.id = "itemId" + (itemNum + 1);
     itemId.required = true;
     // On create, a placeholder value for the select 'Item ID'
     if (itemIdVal === null) {
@@ -66,19 +64,34 @@ function addFieldsHelper(itemIdVal = null, itemQuantityVal = null, inventoryItem
         // Declare other options 
         let existingItem = document.createElement("option");
         existingItem.className = "form-control";
-        existingItem.innerText = itemIdVal;
+        existingItem.innerText = itemIdVal; 
         existingItem.selected = true;
         itemId.appendChild(existingItem)
     };
 
-    // Iterate through inventoryItemIds, create additional options within select
-    for (j = 0; j < inventoryItemIds.length; j++) { // j bc i is used elsewhere 
+    // Iterate through inventoryItems, create additional options within select
+    for (j = 0; j < Object.keys(inventoryItems).length; j++) { // j bc i is used elsewhere 
         let itemOption = document.createElement("option");
         itemOption.className = "form-control";
-        itemOption.innerText = inventoryItemIds[j];
+        itemOption.innerText = Object.keys(inventoryItems)[j];
+
+        // Beyond first item row, deactivate any previously selected itemId from options
+        if (itemNum > 0) {
+            let pvsItemIdVals = []
+            // Iterate through all previous selects by itemId
+            for (k = 0; k < itemNum; k++) {
+                let pvsItemIdVal = document.getElementById('itemId' + (k + 1).toString())
+                if (pvsItemIdVal !== "") {
+                    pvsItemIdVals.push(pvsItemIdVal.value)
+                };
+            };
+            // Check if the item has been previously selected
+            if (pvsItemIdVals.includes(itemOption.innerText)) {
+                itemOption.disabled = true;
+            };
+        };
         itemId.appendChild(itemOption);
     };
-
 
     // Add itemId to rowCol1 and rowCol1 to itemRow
     rowCol1.appendChild(itemId);
@@ -92,15 +105,25 @@ function addFieldsHelper(itemIdVal = null, itemQuantityVal = null, inventoryItem
     let itemQuantity = document.createElement("input");
     itemQuantity.type = "number";
     itemQuantity.min = 0;
+    itemQuantity.max = 0;
     itemQuantity.className = "form-control";
     itemQuantity.name = "itemQuantity" + (itemNum + 1);
     if (itemQuantityVal === null) {
         itemQuantity.placeholder = "Quantity";
     } else {
         itemQuantity.value = itemQuantityVal;
-    }
-
+    };
     itemQuantity.required = true;
+
+    // Modify the parent itemId select and each itemQuantity field so itemId 
+    // option chosen will set max on itemQuantity according to inventoryOnHand 
+    // for that itemId
+    itemId.addEventListener("change", function () {
+        if (itemId.value !== "") {
+            // let inventoryOnHand = inventoryItems[this.value];
+            itemQuantity.max = inventoryItems[this.value];
+        };
+    });
 
     // Add itemQuantity to rowCol2 and rowCol2 to itemRow
     rowCol2.appendChild(itemQuantity);
@@ -130,21 +153,21 @@ function addFieldsHelper(itemIdVal = null, itemQuantityVal = null, inventoryItem
     document.getElementById("itemsContainer").appendChild(completePurchaseButton);
 
 };
-
-function addFields(existingItems = 0, inventoryItemIds = null) {
+// LEFT OFF HERE
+function addFields(existingItems = 0, inventoryItems = null) {
     /*  add PurchaseItem fields during Create or Update of a Purchase 
     *   existingItems: either array of [itemId, itemQuantity] for existing PurchaseItems or 0 
-    *   inventoryItemIds: itemId values to pre-fill form with data
-    */  
+    *   inventoryItems: itemId values to pre-fill form with data
+    */
 
     // Create & Update - New blank row w/ dropdown for items in inventory 
     if (existingItems === 0) {
-        addFieldsHelper(null, null, inventoryItemIds);
+        addFieldsHelper(null, null, inventoryItems);
 
-    // Update - Rows with existing items from pruchase during update purchase + items from inventory
+        // Update - Rows with existing items from pruchase during update purchase + items from inventory
     } else {
         for (i = 0; i < existingItems.length; i++) {
-            addFieldsHelper(existingItems[i]['itemId'], existingItems[i]['itemQuantity'], inventoryItemIds);
+            addFieldsHelper(existingItems[i]['itemId'], existingItems[i]['itemQuantity'], inventoryItems);
         };
     };
 };
