@@ -51,11 +51,11 @@
 {% set deletePurchasesPage %}
     <div>
         {# -- Pre-fill values when called to delete - #}
-          <p><b>Purchase ID:</b> {{deleteRecord['purchaseId']}} </p>
-          <p><b>Customer ID:</b> {{deleteRecord['customerId']}}</p>
-          <p><b>Purchase Date:</b> {{deleteRecord['purchaseDate']}}</p>
-          <p><b>Cost of Sale:</b> {{deleteRecord['costOfSale']}}</p>
-          <p><b>Employee ID:</b>  {{deleteRecord['eeId']}}</p>
+          <p><b>Purchase ID:</b> {{deleteRecord[0]['purchaseId']}} </p>
+          <p><b>Customer ID:</b> {{deleteRecord[0]['customerId']}}</p>
+          <p><b>Purchase Date:</b> {{deleteRecord[0]['purchaseDate']}}</p>
+          <p><b>Cost of Sale:</b> {{deleteRecord[0]['costOfSale']}}</p>
+          <p><b>Employee ID:</b>  {{deleteRecord[0]['eeId']}}</p>
     </div>
 
 {% endset %}
@@ -125,6 +125,7 @@
         <div class="form-check">
             <input type="checkbox" class="form-check-input" id="confirmDelete" name="confirmDelete" value="{{deleteRecord[0]['purchaseId']}}" required>
             <label class="form-check-label" for="confirmDelete" >Yes I would like to delete the {{dbEntity[:-1]}}</label>
+            <input type="hidden" class="form-check-input" id="entityId" name="entityId" value="purchaseId" required>
         </div>
         <button type="submit" class="btn btn-outline-danger">Delete {{dbEntity[:-1].capitalize()}}</button>
         <a href="/{{dbEntity}}" class="btn btn-outline-primary">Return to search</a>

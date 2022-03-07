@@ -158,7 +158,7 @@ DELETE FROM PurchaseItems WHERE purchaseId = '%' and itemId = %s;
 
 
 /*if Update changes were made to quantities compare PurchaseUpdateDict to get QuantityAdj Variable*/
-UPDATE items SET inventoryOnHand = QuantityAdj WHERE itemId =%s;
+UPDATE Items SET inventoryOnHand = QuantityAdj WHERE itemId =%s;
 
 
 
