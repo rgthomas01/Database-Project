@@ -48,6 +48,9 @@ function addFieldsHelper(itemIdVal = null, itemQuantityVal = null, inventoryItem
     itemId.id = "itemId" + (itemNum + 1);
     itemId.required = true;
     // On create, a placeholder value for the select 'Item ID'
+    // TODO make it so there is always a deactivated dummy select and, 
+    // on update, the item from the list that corresponds to itemIdVal 
+    // is selected...consider itemIdVal change to existingItemIdVal
     if (itemIdVal === null) {
         let itemOption = document.createElement("option");
         itemOption.className = "form-control";
@@ -64,7 +67,7 @@ function addFieldsHelper(itemIdVal = null, itemQuantityVal = null, inventoryItem
         // Declare other options 
         let existingItem = document.createElement("option");
         existingItem.className = "form-control";
-        existingItem.innerText = itemIdVal; 
+        existingItem.innerText = itemIdVal;
         existingItem.selected = true;
         itemId.appendChild(existingItem)
     };
