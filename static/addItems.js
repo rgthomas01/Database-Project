@@ -47,10 +47,7 @@ function addFieldsHelper(itemIdVal = null, itemQuantityVal = null, inventoryItem
     itemId.name = "itemId" + (itemNum + 1);
     itemId.id = "itemId" + (itemNum + 1);
     itemId.required = true;
-    // On create, a placeholder value for the select 'Item ID'
-    // TODO make it so there is always a deactivated dummy select and, 
-    // on update, the item from the list that corresponds to itemIdVal 
-    // is selected...consider itemIdVal change to existingItemIdVal
+    // On creation of new PurchaseItems, a placeholder value for the select 'Item ID'
     if (itemIdVal === null) {
         let itemOption = document.createElement("option");
         itemOption.className = "form-control";
@@ -60,7 +57,7 @@ function addFieldsHelper(itemIdVal = null, itemQuantityVal = null, inventoryItem
         itemOption.selected = true;
         itemId.appendChild(itemOption)
     };
-    // On update, there is a pre-selected value
+    // On update of existing PurchaseItems, there is ONLY ONE pre-selected option
     if (itemIdVal !== null) {
         // Set the exisintg value of the select to the itemIdVal
         itemId.value = itemIdVal;
@@ -71,31 +68,32 @@ function addFieldsHelper(itemIdVal = null, itemQuantityVal = null, inventoryItem
         existingItem.selected = true;
         itemId.appendChild(existingItem)
     };
+    // On create / update beyond existing items, dropdown has MULTIPLE options 
+    if (itemIdVal === null) {
+        // Iterate through inventoryItems, create additional options within select
+        for (j = 0; j < Object.keys(inventoryItems).length; j++) { // j bc i is used elsewhere 
+            let itemOption = document.createElement("option");
+            itemOption.className = "form-control";
+            itemOption.innerText = Object.keys(inventoryItems)[j];
 
-    // Iterate through inventoryItems, create additional options within select
-    for (j = 0; j < Object.keys(inventoryItems).length; j++) { // j bc i is used elsewhere 
-        let itemOption = document.createElement("option");
-        itemOption.className = "form-control";
-        itemOption.innerText = Object.keys(inventoryItems)[j];
-
-        // Beyond first item row, deactivate any previously selected itemId from options
-        if (itemNum > 0) {
-            let pvsItemIdVals = []
-            // Iterate through all previous selects by itemId
-            for (k = 0; k < itemNum; k++) {
-                let pvsItemIdVal = document.getElementById('itemId' + (k + 1).toString())
-                if (pvsItemIdVal !== "") {
-                    pvsItemIdVals.push(pvsItemIdVal.value)
+            // Beyond first item row, deactivate any previously selected itemId from options
+            if (itemNum > 0) {
+                let pvsItemIdVals = []
+                // Iterate through all previous selects by itemId
+                for (k = 0; k < itemNum; k++) {
+                    let pvsItemIdVal = document.getElementById('itemId' + (k + 1).toString())
+                    if (pvsItemIdVal !== "") {
+                        pvsItemIdVals.push(pvsItemIdVal.value)
+                    };
+                };
+                // Check if the item has been previously selected
+                if (pvsItemIdVals.includes(itemOption.innerText)) {
+                    itemOption.disabled = true;
                 };
             };
-            // Check if the item has been previously selected
-            if (pvsItemIdVals.includes(itemOption.innerText)) {
-                itemOption.disabled = true;
-            };
+            itemId.appendChild(itemOption);
         };
-        itemId.appendChild(itemOption);
     };
-
     // Add itemId to rowCol1 and rowCol1 to itemRow
     rowCol1.appendChild(itemId);
     itemRow.appendChild(rowCol1)
@@ -108,13 +106,18 @@ function addFieldsHelper(itemIdVal = null, itemQuantityVal = null, inventoryItem
     let itemQuantity = document.createElement("input");
     itemQuantity.type = "number";
     itemQuantity.min = 0;
-    itemQuantity.max = 0;
+    // For newly added PurchaseItems, cannot add to quantity before an itemId chosen
+    if (itemIdVal === null){
+        itemQuantity.max = 0;
+    };
     itemQuantity.className = "form-control";
     itemQuantity.name = "itemQuantity" + (itemNum + 1);
     if (itemQuantityVal === null) {
         itemQuantity.placeholder = "Quantity";
     } else {
         itemQuantity.value = itemQuantityVal;
+        // Set existing item quantity max to the max amount in inventory  
+        itemQuantity.max = inventoryItems[itemId.value];
     };
     itemQuantity.required = true;
 
