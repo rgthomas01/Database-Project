@@ -470,26 +470,59 @@ def update(dbEntity, data, formPrefillData=None):
         colVals = dict(request.form.items())
         updateStr = ""
         for key, val in colVals.items():
-            # TODO Temporary bypass on PurchaseItems to get Purchases partially working
-            # ...not quite there. 
+ 
+            # For Purchases - update PurchaseItems and Items.inventoryOnHand per itemId and itemQuantity
             if dbEntity == "purchases" and 'item' in str(key):
-                # if  'itemId' in str(key):
-                #     itemId = str(val)
-                # elif 'itemQuantity'in str(key):
-                #     itemQuantity = str(val)
-                #     query = "UPDATE PurchaseItems SET itemQuantity=%s WHERE purchaseId=%s AND 1=1;" 
-                #     print(query)
-                #     cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(itemQuantity,idValue, ))
-                #     results = cursor.fetchall()
-                pass
+                # Get itemId per item
+                if  'itemId' in str(key):
+                    itemId = str(val)
+                # Get itemQuantity per item 
+                elif 'itemQuantity'in str(key):
+                    itemQuantity = str(val)
+
+                    # Query PurchaseItems to see if Item was an existing PurchaseItem in Purchase
+                    purchaseItemsQuery = "SELECT * FROM PurchaseItems WHERE (purchaseId,itemId) = (%s,%s);"
+                    cursor = db.execute_query(db_connection=db_connection, query=purchaseItemsQuery, query_params=(idValue, itemId,))
+                    results = cursor.fetchall()
+
+                    # Item was an EXISTING PurchaseItem on the Purchase
+                    if len(results) > 0: 
+                        # Difference between new quantity and old
+                        itemInventoryChange = int(results[0]['itemQuantity']) - int(itemQuantity)
+                        # Update Items.inventoryOnHand if there is an inventory change 
+                        if itemInventoryChange != 0:
+                            updateInventoryQuery = "UPDATE Items SET inventoryOnHand=inventoryOnHand+%s WHERE itemId=%s;" 
+                            cursor = db.execute_query(db_connection=db_connection, query=updateInventoryQuery, query_params=(itemInventoryChange, itemId,))
+                            # Update PurchaseItems as well 
+                            # If the change to itemQuantity would make the itemQuantity 0, DELETE item from the PurchaseItems
+                            if int(results[0]['itemQuantity'])-itemInventoryChange == 0:
+                                deltePurchaseItemQuery = "DELETE FROM PurchaseItems WHERE (purchaseId,itemId) = (%s,%s);"
+                                cursor = db.execute_query(db_connection=db_connection, query=deltePurchaseItemQuery, query_params=(idValue, itemId,))
+                            # Otherwise, just update PurchaseItems.itemQuantity
+                            else:
+                                updatePurchaseItemsQuery = "UPDATE PurchaseItems SET itemQuantity=itemQuantity-%s WHERE (purchaseId,itemId) = (%s,%s);" 
+                                cursor = db.execute_query(db_connection=db_connection, query=updatePurchaseItemsQuery, query_params=(itemInventoryChange,idValue, itemId,))
+
+                    # Item is a NEW PurchaseItem on the Purchase
+                    else: 
+                        # Update Items.inventoryOnHand if specified itemQuantity is not 0:
+                        if int(itemQuantity) > 0: 
+                            updateInventoryQuery = "UPDATE Items SET inventoryOnHand=inventoryOnHand-%s WHERE itemId=%s;" 
+                            cursor = db.execute_query(db_connection=db_connection, query=updateInventoryQuery, query_params=(int(itemQuantity), itemId,))
+                            #Update PurchaseItems.itemQuantity
+                            updatePurchaseItemsQuery = "INSERT INTO PurchaseItems (purchaseId,itemId,itemQuantity) VALUES (%s,%s,%s);" 
+                            cursor = db.execute_query(db_connection=db_connection, query=updatePurchaseItemsQuery, query_params=(idValue,itemId,itemQuantity,))
+
+            # All other NON-Purcahse entities, compile parameterized query string for update
             else:
                 updateStr += (f"{str(key)}='{str(val)}', ")
+        
+        # Update all other info 
         updateStr = updateStr[:-2]
         query = "UPDATE "+ dbEntity.title() +" SET "+updateStr+" WHERE " +entityId+"= %s"
         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(idValue,))
         results = cursor.fetchall()
         
-
         # Render success page         
         return render_template("createUpdate.j2", dbEntity=dbEntity, data=dict(request.form.items()), operation="update",updateRecord=None, formPrefillData=formPrefillData, updated=True)
 
