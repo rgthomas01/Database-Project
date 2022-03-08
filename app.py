@@ -188,7 +188,6 @@ def purchasesRetrieve():
             if request.args['eeId'] != '':
                 eeId = request.args['eeId']
                 paramList.append(eeId)
-
             #build string to use after WHERE clause
             selectStr = ''
             for i in request.args.keys():
@@ -596,44 +595,8 @@ def delete(dbEntity,data):
 
     if request.method == "POST":
         
-      # Can probably get rid of deleted=True/False
-      return render_template("delete.j2", dbEntity=dbEntity, data=data, operation="delete",deleteRecord=data, deleted=True) 
+        return render_template("delete.j2", dbEntity=dbEntity, data=data, operation="delete",deleteRecord=data, deleted = True) 
 
-
-
-
-
-#@app.route('/employees/delete',methods=["GET", "POST"])
-# def employeesDelete():
-#     db_connection = db.connect_to_database()
-
-#     dbEntity = "employees"
-
-#     if request.method == "GET":
-#         eeId = request.args['eeId']
-
-#         query = "SELECT * FROM Employees WHERE eeId = %s " 
-#         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(eeId, ))       
-#         data = (cursor.fetchall())
-
-        
-#     #data = mockData['employees']
-
-#         return delete(dbEntity, data)
-    
-#     if request.method == "POST":
-#         entityId= request.form['confirmDelete']
-
-#         #to populate 
-#         query = "SELECT * FROM Employees WHERE eeId = %s " 
-#         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(entityId, ))       
-#         data = cursor.fetchall()
-
-#         query2 = "DELETE FROM Employees WHERE eeId = %s"
-#         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(entityId, ))       
-#         data = cursor.fetchall()
-
-#         return delete(dbEntity, data)
 
 
 
@@ -657,7 +620,6 @@ def purchasesDelete():
 
     if request.method == "POST":
         purchaseId= request.form['confirmDelete']
-
         #to populate
         query = "SELECT * FROM Purchases WHERE purchaseId = %s " 
         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(purchaseId, ))       
@@ -671,37 +633,28 @@ def purchasesDelete():
         
         #for all things in purchase
         for x in range(len(purchaseItems)):
-            itemId = ((purchaseItems[x]['itemId']))
+            paramList = []
+            itemId = str((purchaseItems[x]['itemId']))
             itemQuantity = ((purchaseItems[x]['itemQuantity']))
+            
 
             #Place cancelled order items back in inventory 
-            query = "UPDATE Items SET inventoryOnHand = %s WHERE itemId =%s;"
-            print(query)
-            cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(itemId, itemQuantity ))       
+            updateInventoryQuery = "UPDATE Items SET inventoryOnHand = inventoryOnHand + %s WHERE itemId =%s;"
+            print(updateInventoryQuery)
+            cursor = db.execute_query(db_connection=db_connection, query=updateInventoryQuery, query_params=(itemQuantity, itemId  ))       
 
             #delete PurchaseItems 
-            query = "DELETE FROM PurchaseItems where purchaseId =%s;"
-            cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(purchaseId, ))       
+            deletePurchaseItemsquery = "DELETE FROM PurchaseItems where purchaseId =%s;"
+            cursor = db.execute_query(db_connection=db_connection, query=deletePurchaseItemsquery, query_params=(purchaseId, ))       
 
 
-        query2 = "DELETE FROM Purchases WHERE purchaseId = %s;"
-        print(query2)
-        cursor = db.execute_query(db_connection=db_connection, query=query2, query_params=(purchaseId, ))    
+        deletePurchases = "DELETE FROM Purchases WHERE purchaseId = %s;"
+        print(deletePurchases)
+        cursor = db.execute_query(db_connection=db_connection, query=deletePurchases, query_params=(purchaseId, ))    
 
 
 
         return delete(dbEntity, data)
-
-   
-
-@app.route('/items/delete',methods=["GET", "POST"])
-def itemsDelete():
-    db_connection = db.connect_to_database()
-
-    dbEntity = "items"
-    data = mockData['items']
-
-    return delete(dbEntity, data)
 
 
 if __name__ == "__main__":
