@@ -188,7 +188,6 @@ def purchasesRetrieve():
             if request.args['eeId'] != '':
                 eeId = request.args['eeId']
                 paramList.append(eeId)
-
             #build string to use after WHERE clause
             selectStr = ''
             for i in request.args.keys():
@@ -619,7 +618,6 @@ def delete(dbEntity,data):
 
         entityId = deleteRecord[0][0]
         idValue = deleteRecord[0][1]
-
         query= "SELECT * FROM " + dbEntity.title() + " WHERE " + entityId+ " = %s" 
         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(idValue, ))       
         deleteRecord = (cursor.fetchall())
@@ -628,67 +626,14 @@ def delete(dbEntity,data):
         # Render the template, pre-populated with subject's existing information from db
         return render_template("delete.j2", dbEntity=dbEntity, data=data, operation="delete", deleteRecord=deleteRecord, deleted=False)
   
-    # Submit new information to affect delete 
+    # Submit new information to confirm delete 
+
     if request.method == "POST":
-        eeId=(request.form['confirmDelete'])
-
-        query = "SELECT * FROM Employees WHERE eeId = %s " 
-        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(eeId, ))       
-        deleteRecord = (cursor.fetchall())
         
-        #Still need to run actual delete query. Convert select to dict to populated sucessfuly deleted from 
-        #Then run delete query
-        #https://stackoverflow.com/questions/28755505/how-to-convert-sql-query-results-into-a-python-dictionary
+        return render_template("delete.j2", dbEntity=dbEntity, data=data, operation="delete",deleteRecord=data, deleted = True) 
 
 
 
-        # Can probably get rid of deleted=True/False
-        return render_template("delete.j2", dbEntity=dbEntity, data=(deleteRecord), operation="delete",deleteRecord=deleteRecord, deleted=True) 
-
-
-# @app.route('/employees/delete',methods=["GET", "POST"])
-# def employeesDelete():
-#     db_connection = db.connect_to_database()
-
-#     dbEntity = "employees"
-
-#     if request.method == "GET":
-#         eeId = request.args['eeId']
-
-#         query = "SELECT * FROM Employees WHERE eeId = %s " 
-#         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(eeId, ))       
-#         data = (cursor.fetchall())
-
-        
-#     #data = mockData['employees']
-
-#         return delete(dbEntity, data)
-    
-#     if request.method == "POST":
-#         entityId= request.form['confirmDelete']
-
-#         #to populate 
-#         query = "SELECT * FROM Employees WHERE eeId = %s " 
-#         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(entityId, ))       
-#         data = cursor.fetchall()
-
-#         query2 = "DELETE FROM Employees WHERE eeId = %s"
-#         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(entityId, ))       
-#         data = cursor.fetchall()
-
-#         return delete(dbEntity, data)
-
-
-
-
-@app.route('/customers/delete',methods=["GET", "POST"])
-def customersDelete():
-    db_connection = db.connect_to_database()
-
-    dbEntity = "customers"
-    data = mockData['customers']
-
-    return delete(dbEntity, data)
 
 
 @app.route('/purchases/delete',methods=["GET", "POST"])
@@ -696,19 +641,55 @@ def purchasesDelete():
     db_connection = db.connect_to_database()
 
     dbEntity = "purchases"
-    data = mockData['purchases']
 
-    return delete(dbEntity, data)
+    if request.method == "GET":
+        purchaseId = request.args['purchaseId']
+
+        query = "SELECT * FROM Purchases WHERE purchaseId = %s " 
+        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(purchaseId, ))       
+        data = (cursor.fetchall())
+
+        
+
+        return delete(dbEntity, data)
+
+    if request.method == "POST":
+        purchaseId= request.form['confirmDelete']
+        #to populate
+        query = "SELECT * FROM Purchases WHERE purchaseId = %s " 
+        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(purchaseId, ))       
+        data = cursor.fetchall()
+
+        #get all purchaseItems with given purchaseID
+        query = "SELECT * FROM PurchaseItems WHERE purchaseId = %s"
+        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(purchaseId, ))       
+        purchaseItems = (cursor.fetchall())
+
+        
+        #for all things in purchase
+        for x in range(len(purchaseItems)):
+            paramList = []
+            itemId = str((purchaseItems[x]['itemId']))
+            itemQuantity = ((purchaseItems[x]['itemQuantity']))
+            
+
+            #Place cancelled order items back in inventory 
+            updateInventoryQuery = "UPDATE Items SET inventoryOnHand = inventoryOnHand + %s WHERE itemId =%s;"
+            print(updateInventoryQuery)
+            cursor = db.execute_query(db_connection=db_connection, query=updateInventoryQuery, query_params=(itemQuantity, itemId  ))       
+
+            #delete PurchaseItems 
+            deletePurchaseItemsquery = "DELETE FROM PurchaseItems where purchaseId =%s;"
+            cursor = db.execute_query(db_connection=db_connection, query=deletePurchaseItemsquery, query_params=(purchaseId, ))       
 
 
-@app.route('/items/delete',methods=["GET", "POST"])
-def itemsDelete():
-    db_connection = db.connect_to_database()
+        deletePurchases = "DELETE FROM Purchases WHERE purchaseId = %s;"
+        print(deletePurchases)
+        cursor = db.execute_query(db_connection=db_connection, query=deletePurchases, query_params=(purchaseId, ))    
 
-    dbEntity = "items"
-    data = mockData['items']
 
-    return delete(dbEntity, data)
+
+        return delete(dbEntity, data)
 
 
 if __name__ == "__main__":
