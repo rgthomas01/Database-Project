@@ -116,8 +116,10 @@ function addFieldsHelper(itemIdVal = null, itemQuantityVal = null, inventoryItem
         itemQuantity.placeholder = "Quantity";
     } else {
         itemQuantity.value = itemQuantityVal;
-        // Set existing item quantity max to the max amount in inventory  
-        itemQuantity.max = inventoryItems[itemId.value];
+        // Set existing item quantity max to the max amount in inventory 
+        // 220308 BUG FIX: On update there was bug that wouldn't allow existing value to exceed current inventory
+        // ...fix by making it itemQuantityVal + Item.inventoryOnHand 
+        itemQuantity.max = inventoryItems[itemId.value] + itemQuantityVal;
     };
     itemQuantity.required = true;
 

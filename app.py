@@ -404,8 +404,11 @@ def purchasesCreate():
             query = "INSERT INTO PurchaseItems (purchaseId, itemId, itemQuantity) VALUES (%s,%s,%s);"
             cursor = db.execute_query(db_connection=db_connection, query=query,  query_params = (purchaseId, purchaseItemIds[i], purchaseItemQuantities[i]))       
             results = (cursor.fetchall())
+            # adjust Items.inventoryOnHand
+            updateInventoryQuery = "UPDATE Items SET inventoryOnHand=inventoryOnHand-%s WHERE itemId=%s;" 
+            cursor = db.execute_query(db_connection=db_connection, query=updateInventoryQuery, query_params=(int(purchaseItemQuantities[i]), purchaseItemIds[i],))
 
-        print(formPrefillData)
+        # print(formPrefillData)
         return create(dbEntity, formPrefillData)
 
 
