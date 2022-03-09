@@ -221,7 +221,7 @@
                   <th>{{col}}</th>
                   {% endfor %}
                   <th>Modify</th>
-                  {% if dbEntity != "employees" %}
+                  {% if dbEntity == "purchases" %}
                   <th>Delete</th>
                   {% endif %}
                 </tr>
@@ -254,7 +254,7 @@
                         <a onclick="this.parentNode.submit();" class="btn btn-sm btn-outline-secondary">update</a>
                       </form>
                     </td>
-                    {% if dbEntity != "employees" %}
+                    {% if dbEntity == "purchases" %}
                     <td>
                       <form method="GET" action="{{dbEntity}}/delete">
                         <input type="hidden" name="{{row.keys() | first}}" value="{{row.values() | first}}"> 
