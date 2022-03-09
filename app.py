@@ -1,4 +1,4 @@
-from flask import Flask, render_template, json, redirect, request #added request
+from flask import Flask, render_template, redirect, request
 from flask_mysqldb import MySQL
 from flask import request
 import os
@@ -21,7 +21,7 @@ def main():
 
 # ------------------------------RETRIEVE------------------------------
 
-def retrieve(dbEntity, data):
+def retrieve(dbEntity, data=None):
     #test comment for branching 2
     # RETRIEVE - landing page / retrieve results
     db_connection = db.connect_to_database() 
@@ -29,7 +29,7 @@ def retrieve(dbEntity, data):
 
         # Landing page for search - take non-query URL request to /<dbEntity>
         if len(request.args) == 0:
-            return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+            return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False)
 
         # Retrieval page - take query URL to /<dbEntity> and render table template with matching data
         elif len(request.args) > 0:
@@ -55,7 +55,7 @@ def employeeRetrieve():
 
             if len(results) == 0: #if db is empty 
                results = None
-            return retrieve(dbEntity, data= results)
+            return retrieve(dbEntity, data=results)
 
         else:
             paramList = []
@@ -85,7 +85,7 @@ def employeeRetrieve():
                     selectStr = selectStr + i + " = %s"
 
             if len(selectStr)== 0:      # if blank search 
-                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False)
 
             else:
                 query =  "Select * FROM Employees WHERE " + selectStr +";   " 
@@ -95,11 +95,11 @@ def employeeRetrieve():
                 if len(results) ==0:
                     results = None
 
-            return retrieve(dbEntity, data= results)
+            return retrieve(dbEntity, data=results)
 
 
     else:
-        return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+        return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False)
 
 
 @app.route('/customers',methods=["GET", "POST"])
@@ -149,7 +149,7 @@ def customerRetrieve():
                     selectStr = selectStr + i + " = %s"
 
             if len(selectStr)== 0:      # if blank search 
-                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False)
 
             else:
                 query =  "Select * FROM Customers WHERE " + selectStr +  ";" 
@@ -159,11 +159,11 @@ def customerRetrieve():
                 if len(results)==0:
                     results = None
                     
-            return retrieve(dbEntity, data= results)
+            return retrieve(dbEntity, data=results)
 
         
     else:
-       return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+       return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False)
 
 
 @app.route('/purchases',methods=["GET", "POST"])
@@ -185,7 +185,7 @@ def purchasesRetrieve():
             if len(results) == 0: #if db is empty 
                results = None
             
-            return retrieve(dbEntity, data = results)
+            return retrieve(dbEntity, data=results)
         
         else:
             paramList = []
@@ -215,7 +215,7 @@ def purchasesRetrieve():
                     selectStr = selectStr + i + " = %s"
                 
             if len(selectStr)==0:      # if blank search 
-                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False)
 
             else:
                 query =  "Select * FROM Purchases WHERE " + selectStr +  ";" 
@@ -225,11 +225,11 @@ def purchasesRetrieve():
                 if len(results)==0: 
                     results = None
 
-            return retrieve(dbEntity, data= results)
+            return retrieve(dbEntity, data=results)
 
         
     else:
-        return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+        return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False)
 
 @app.route('/items',methods=["GET", "POST"])
 def itemsRetrieve():
@@ -277,7 +277,7 @@ def itemsRetrieve():
                     selectStr = selectStr + i + " = %s"
 
             if len(selectStr)== 0:      # if blank search 
-                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False)
 
             else:
                 query =  "Select * FROM Items WHERE " + selectStr +  ";" 
@@ -287,11 +287,11 @@ def itemsRetrieve():
                 if len(results)==0:
                     results = None
 
-                return retrieve(dbEntity, data= results)
+                return retrieve(dbEntity, data=results)
 
         
     else:
-        return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+        return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False)
 
 # ------------------------------CREATE------------------------------
 
@@ -458,7 +458,7 @@ def itemsCreate():
 
 # ------------------------------UPDATE------------------------------
 
-def update(dbEntity, data, formPrefillData=None):
+def update(dbEntity, data=None, formPrefillData=None):
     db_connection = db.connect_to_database()
     # GET will initially show a form filled with existing data. 
     if request.method == "GET":
@@ -557,11 +557,8 @@ def employeesUpdate():
     db_connection = db.connect_to_database()
 
     dbEntity = "employees"
-    # JSON Version 
-    data = None
 
-    # SQL Version 
-    return update(dbEntity, data)
+    return update(dbEntity)
  
 
 @app.route('/customers/update',methods=["GET", "POST"])
@@ -569,11 +566,8 @@ def customersUpdate():
     db_connection = db.connect_to_database()
 
     dbEntity = "customers"
-    # JSON Version 
-    data = None
 
-    # SQL Version 
-    return update(dbEntity, data)
+    return update(dbEntity)
     
 
 
@@ -606,19 +600,7 @@ def purchasesUpdate():
     # pass those through when the template calls addItems.js
     formPrefillData['inventoryItems'] = { str(i['itemId']):int(i['inventoryOnHand']) for i in cursor.fetchall()} #list > template > js array
 
-    
-        
-
-    # JSON Version 
-    data = None
-
-    # SQL Version 
-
-
-    print(formPrefillData)
-
-
-    return update(dbEntity, data, formPrefillData)
+    return update(dbEntity, formPrefillData=formPrefillData)
 
 
 @app.route('/items/update',methods=["GET", "POST"])
@@ -626,11 +608,8 @@ def itemsUpdate():
     db_connection = db.connect_to_database()
 
     dbEntity = "items"
-    # JSON Version 
-    data = None
 
-    # SQL Version 
-    return update(dbEntity, data)
+    return update(dbEntity)
 
 
 # ------------------------------DELETE------------------------------
