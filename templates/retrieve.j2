@@ -62,7 +62,7 @@
         <!-------------------------------------------------->
         {% if dbEntity == "employees" %}
         <!-- Retrieval query form -->
-          <form action="/{{dbEntity}}" method="GET">
+          <form id=retrieveForm onsubmit= "return retrieveValidation('{{dbEntity}}')" action="/{{dbEntity}}" method="GET">
             <div class="form-row">
               <div class="col-2">
                 <input type="text" class="form-control" id="eeId" name="eeId" placeholder="ID">
@@ -97,7 +97,7 @@
         <!-------------------------------------------------->
         {% elif dbEntity == "customers" %}
         <!-- Retrieval query form -->
-          <form action="/{{dbEntity}}" method="GET">
+          <form id=retrieveForm onsubmit= "return retrieveValidation('{{dbEntity}}')" action="/{{dbEntity}}" method="GET">
             <div class="form-row">
               <div class="col-2">
                 <input type="text" class="form-control" id="customerId" name="customerId" placeholder="ID">
@@ -127,7 +127,7 @@
         <!-------------------------------------------------->
         <!-- dbEntity is Purchases -->
         {% elif dbEntity == "purchases" %}
-          <form action="/{{dbEntity}}">
+          <form  id=retrieveForm onsubmit= "return retrieveValidation('{{dbEntity}}')" action="/{{dbEntity}}">
             <div class="form-row">
               <div class="col-4">
                 <label for="purchaseDate">Purchase date</label>
@@ -158,7 +158,7 @@
         <!-------------------------------------------------->
         <!-- dbEntity is Items -->
         {% elif dbEntity == "items" %}
-          <form action="/{{dbEntity}}">
+          <form id=retrieveForm onsubmit= "return retrieveValidation('{{dbEntity}}')" action="/{{dbEntity}}">
             <div class="form-row">
               <div class="col-3">
                 <input type="text" class="form-control" id="itemId" name="itemId" placeholder="Item ID">
