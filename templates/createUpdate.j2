@@ -79,10 +79,10 @@
         <label for="eePosition">Employee position</label>
         <select class="custom-select" name="eePosition" id="eePosition" required>
             <option value="" disabled selected>Choose position</option>
-            <option value="salesAssociate">Sales Associate</option>
-            <option value="floorManager">Floor Manager</option>
-            <option value="mechanic">Mechanic</option>
-            <option value="generalManager">General Manager</option>
+            <option value="Sales Associate">Sales Associate</option>
+            <option value="Floor Manager">Floor Manager</option>
+            <option value="Mechanic">Mechanic</option>
+            <option value="General Manager">General Manager</option>
         </select> 
         </div>
         <div class="col-5">
@@ -94,6 +94,14 @@
         </select> 
         </div>
     </div>
+    {# on update pre-select dropdown options #}
+    {% if operation == "update" %}
+        <script>
+            function eeSelect(){eeUpdateSelect({{updateRecord}})};
+            window.onload=eeSelect;
+        </script>
+
+    {% endif %}
     <div class="form-row">
         <button type="submit" class="btn btn-outline-primary">Submit</button>
     </div>
