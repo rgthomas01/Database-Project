@@ -318,6 +318,14 @@
                 <option>Apparel</option>
             </select>              
             </div>
+            {# on update pre-select dropdown options #}
+            {% if operation == "update" %}
+                <script>
+                    {# Note: itemType passed directly #}
+                    function itemTypeSelect(){itemUpdateSelect(  "{{updateRecord['itemType']}}"  ) }; 
+                    window.onload=itemTypeSelect;
+                </script>
+            {% endif %}
             <div class="col-3">
                 <label for="inventoryOnHand">Inventory</label>
                 <input type="number" min="1" step="1" class="form-control" id="inventoryOnHand" name="inventoryOnHand" value="{{updateRecord['inventoryOnHand']}}" required>
