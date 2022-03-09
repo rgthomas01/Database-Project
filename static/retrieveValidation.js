@@ -40,6 +40,7 @@ function retrieveValidation (dbEntity){
         if (purchaseId ==""
             && customerId ==""
             && eeId == ""
+            && purchaseDate == ""
             ){alert("Must use at least 1 search criteria")}
     }
     if (dbEntity == "items"){ 
