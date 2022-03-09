@@ -721,3 +721,13 @@ def purchasesDelete():
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 3838))
     app.run(host='localhost.',port=port, debug=True)
+
+# ------------------------------ERROR HANDLER------------------------------
+
+#https://www.geeksforgeeks.org/python-404-error-handling-in-flask/
+@app.errorhandler(404)
+# inbuilt function which takes error as parameter
+def not_found(e):
+    e = str(e)
+# defining function
+    return render_template("error/error.j2",errorType=e[:e.find(":")],errorMessage=e[e.find(":")+1:])
