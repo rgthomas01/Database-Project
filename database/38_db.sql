@@ -65,19 +65,19 @@ CREATE TABLE `Employees` (
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
 INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `eeStatus`) 
-VALUES (NULL, 'Paul', 'Bunion', 'floorManager', '1');
+VALUES (NULL, 'Paul', 'Bunion', 'Floor Manager', '1');
 
 INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `eeStatus`) 
-VALUES (NULL, 'Laura', 'Bunion', 'floorManager', '2');
+VALUES (NULL, 'Laura', 'Bunion', 'Floor Manager', '2');
 
 INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `eeStatus`) 
-VALUES (NULL, 'John', 'Smith', 'generalManager', '1');
+VALUES (NULL, 'John', 'Smith', 'General Manager', '1');
 
 INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `eeStatus`) 
 VALUES (NULL, 'John', 'Doe', 'Mechanic', '2');
 
 INSERT INTO `Employees` (`eeId`, `eeFirstName`, `eeLastName`,  `eePosition`, `eeStatus`) 
-VALUES (NULL, 'George', 'Jetson', 'salesAssociate', '2');
+VALUES (NULL, 'George', 'Jetson', 'Sales Associate', '2');
 
 CREATE TABLE `Purchases` (
   `purchaseId` int(11) NOT NULL AUTO_INCREMENT UNIQUE,
