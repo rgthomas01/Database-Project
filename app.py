@@ -45,13 +45,16 @@ def employeeRetrieve():
     retrieveRecord = [i for i in request.args.items()]
 
 
-    if request.method == "GET" and len(retrieveRecord)>0:
+    if request.method == "GET" and len(retrieveRecord)>=1:
         
         if 'retrieveAll' in request.args.keys(): #if retrieve all 
         
             query = "Select * FROM Employees;"
             cursor = db.execute_query(db_connection=db_connection, query=query)
             results = (cursor.fetchall())
+
+            if len(results) == 0: #if db is empty 
+               results = None
             return retrieve(dbEntity, data= results)
 
         else:
@@ -80,21 +83,23 @@ def employeeRetrieve():
                     if len(selectStr)>0:
                         selectStr = selectStr +" AND "
                     selectStr = selectStr + i + " = %s"
-            
-            query =  "Select * FROM Employees WHERE " + selectStr +";   " 
-            cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
-            results = (cursor.fetchall())
-            
-            if len(results)==0:
-                results = None
+
+            if len(selectStr)== 0:      # if blank search 
+                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+
+            else:
+                query =  "Select * FROM Employees WHERE " + selectStr +";   " 
+                cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
+                results = (cursor.fetchall())
+
+                if len(results) ==0:
+                    results = None
+
             return retrieve(dbEntity, data= results)
 
 
-    else:  #if request with No args , without this /employees page breaks 
-        query = "Select * FROM Employees;"
-        cursor = db.execute_query(db_connection=db_connection, query=query)
-        results = (cursor.fetchall())
-        return retrieve(dbEntity, data=results)
+    else:
+        return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
 
 
 @app.route('/customers',methods=["GET", "POST"])
@@ -105,12 +110,16 @@ def customerRetrieve():
     #get arguements from Get Request
     retrieveRecord = [i for i in request.args.items()]
 
-    if request.method == "GET" and len(retrieveRecord)>0:
+    if request.method == "GET" and len(retrieveRecord)>=1:
         
         if 'retrieveAll' in request.args.keys(): #if retrieve all 
             query = "Select * FROM Customers;"
             cursor = db.execute_query(db_connection=db_connection, query=query)
             results = (cursor.fetchall())
+            
+            if len(results) == 0: #if db is empty 
+               results = None
+
             return retrieve(dbEntity, data=results)
         
         else:
@@ -138,21 +147,23 @@ def customerRetrieve():
                     if len(selectStr)>0:
                         selectStr = selectStr +" OR "
                     selectStr = selectStr + i + " = %s"
-            
-            query =  "Select * FROM Customers WHERE " + selectStr +  ";" 
-            cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
-            results = (cursor.fetchall())
-            
-            if len(results)==0:
-                results = None
+
+            if len(selectStr)== 0:      # if blank search 
+                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+
+            else:
+                query =  "Select * FROM Customers WHERE " + selectStr +  ";" 
+                cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
+                results = (cursor.fetchall())
+                
+                if len(results)==0:
+                    results = None
+                    
             return retrieve(dbEntity, data= results)
 
         
     else:
-        query = "Select * FROM Customers;"
-        cursor = db.execute_query(db_connection=db_connection, query=query)
-        results = (cursor.fetchall())
-        return retrieve(dbEntity, data=results)
+       return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
 
 
 @app.route('/purchases',methods=["GET", "POST"])
@@ -163,13 +174,18 @@ def purchasesRetrieve():
 
     retrieveRecord = [i for i in request.args.items()]
 
-    if request.method == "GET" and len(retrieveRecord)>0:
+    if request.method == "GET" and len(retrieveRecord)>=1 :
+        
         
         if 'retrieveAll' in request.args.keys(): #if retrieve all 
             query = "Select * FROM Purchases;"
             cursor = db.execute_query(db_connection=db_connection, query=query)
             results = (cursor.fetchall())
-            return retrieve(dbEntity, data=results)
+
+            if len(results) == 0: #if db is empty 
+               results = None
+            
+            return retrieve(dbEntity, data = results)
         
         else:
             paramList = []
@@ -188,6 +204,7 @@ def purchasesRetrieve():
             if request.args['eeId'] != '':
                 eeId = request.args['eeId']
                 paramList.append(eeId)
+
             #build string to use after WHERE clause
             selectStr = ''
             for i in request.args.keys():
@@ -196,21 +213,23 @@ def purchasesRetrieve():
                     if len(selectStr)>0:
                         selectStr = selectStr +" OR "
                     selectStr = selectStr + i + " = %s"
+                
+            if len(selectStr)==0:      # if blank search 
+                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
 
-            query =  "Select * FROM Purchases WHERE " + selectStr +  ";" 
-            cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
-            results = (cursor.fetchall())
+            else:
+                query =  "Select * FROM Purchases WHERE " + selectStr +  ";" 
+                cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
+                results = (cursor.fetchall())
             
-            if len(results)==0:
-                results = None
+                if len(results)==0: 
+                    results = None
+
             return retrieve(dbEntity, data= results)
 
         
     else:
-        query = "Select * FROM Customers;"
-        cursor = db.execute_query(db_connection=db_connection, query=query)
-        results = (cursor.fetchall())
-        return retrieve(dbEntity, data=results)
+        return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
 
 @app.route('/items',methods=["GET", "POST"])
 def itemsRetrieve():
@@ -226,6 +245,9 @@ def itemsRetrieve():
             cursor = db.execute_query(db_connection=db_connection, query=query)
             results = (cursor.fetchall())
             return retrieve(dbEntity, data=results)
+
+            if len(results) == 0: #if db is empty 
+               results = None
         
         else:
             paramList = []
@@ -254,21 +276,22 @@ def itemsRetrieve():
                         selectStr = selectStr +" OR "
                     selectStr = selectStr + i + " = %s"
 
-            query =  "Select * FROM Items WHERE " + selectStr +  ";" 
-            cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
-            results = (cursor.fetchall())
+            if len(selectStr)== 0:      # if blank search 
+                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+
+            else:
+                query =  "Select * FROM Items WHERE " + selectStr +  ";" 
+                cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
+                results = (cursor.fetchall())
             
-            if len(results)==0:
-                results = None
-            return retrieve(dbEntity, data= results)
+                if len(results)==0:
+                    results = None
+
+                return retrieve(dbEntity, data= results)
 
         
     else:
-        query = "Select * FROM Items;"
-        cursor = db.execute_query(db_connection=db_connection, query=query)
-        results = (cursor.fetchall())
-        return retrieve(dbEntity, data=results)
-
+        return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
 
 # ------------------------------CREATE------------------------------
 
