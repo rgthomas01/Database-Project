@@ -45,13 +45,16 @@ def employeeRetrieve():
     retrieveRecord = [i for i in request.args.items()]
 
 
-    if request.method == "GET" and len(retrieveRecord)>0:
+    if request.method == "GET" and len(retrieveRecord)>=1:
         
         if 'retrieveAll' in request.args.keys(): #if retrieve all 
         
             query = "Select * FROM Employees;"
             cursor = db.execute_query(db_connection=db_connection, query=query)
             results = (cursor.fetchall())
+
+            if len(results) == 0: #if db is empty 
+               results = None
             return retrieve(dbEntity, data= results)
 
         else:
@@ -80,21 +83,23 @@ def employeeRetrieve():
                     if len(selectStr)>0:
                         selectStr = selectStr +" AND "
                     selectStr = selectStr + i + " = %s"
-            
-            query =  "Select * FROM Employees WHERE " + selectStr +";   " 
-            cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
-            results = (cursor.fetchall())
-            
-            if len(results)==0:
-                results = None
+
+            if len(selectStr)== 0:      # if blank search 
+                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+
+            else:
+                query =  "Select * FROM Employees WHERE " + selectStr +";   " 
+                cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
+                results = (cursor.fetchall())
+
+                if len(results) ==0:
+                    results = None
+
             return retrieve(dbEntity, data= results)
 
 
-    else:  #if request with No args , without this /employees page breaks 
-        query = "Select * FROM Employees;"
-        cursor = db.execute_query(db_connection=db_connection, query=query)
-        results = (cursor.fetchall())
-        return retrieve(dbEntity, data=results)
+    else:
+        return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
 
 
 @app.route('/customers',methods=["GET", "POST"])
@@ -105,12 +110,16 @@ def customerRetrieve():
     #get arguements from Get Request
     retrieveRecord = [i for i in request.args.items()]
 
-    if request.method == "GET" and len(retrieveRecord)>0:
+    if request.method == "GET" and len(retrieveRecord)>=1:
         
         if 'retrieveAll' in request.args.keys(): #if retrieve all 
             query = "Select * FROM Customers;"
             cursor = db.execute_query(db_connection=db_connection, query=query)
             results = (cursor.fetchall())
+            
+            if len(results) == 0: #if db is empty 
+               results = None
+
             return retrieve(dbEntity, data=results)
         
         else:
@@ -138,21 +147,23 @@ def customerRetrieve():
                     if len(selectStr)>0:
                         selectStr = selectStr +" OR "
                     selectStr = selectStr + i + " = %s"
-            
-            query =  "Select * FROM Customers WHERE " + selectStr +  ";" 
-            cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
-            results = (cursor.fetchall())
-            
-            if len(results)==0:
-                results = None
+
+            if len(selectStr)== 0:      # if blank search 
+                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+
+            else:
+                query =  "Select * FROM Customers WHERE " + selectStr +  ";" 
+                cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
+                results = (cursor.fetchall())
+                
+                if len(results)==0:
+                    results = None
+                    
             return retrieve(dbEntity, data= results)
 
         
     else:
-        query = "Select * FROM Customers;"
-        cursor = db.execute_query(db_connection=db_connection, query=query)
-        results = (cursor.fetchall())
-        return retrieve(dbEntity, data=results)
+       return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
 
 
 @app.route('/purchases',methods=["GET", "POST"])
@@ -163,13 +174,18 @@ def purchasesRetrieve():
 
     retrieveRecord = [i for i in request.args.items()]
 
-    if request.method == "GET" and len(retrieveRecord)>0:
+    if request.method == "GET" and len(retrieveRecord)>=1 :
+        
         
         if 'retrieveAll' in request.args.keys(): #if retrieve all 
             query = "Select * FROM Purchases;"
             cursor = db.execute_query(db_connection=db_connection, query=query)
             results = (cursor.fetchall())
-            return retrieve(dbEntity, data=results)
+
+            if len(results) == 0: #if db is empty 
+               results = None
+            
+            return retrieve(dbEntity, data = results)
         
         else:
             paramList = []
@@ -188,6 +204,7 @@ def purchasesRetrieve():
             if request.args['eeId'] != '':
                 eeId = request.args['eeId']
                 paramList.append(eeId)
+
             #build string to use after WHERE clause
             selectStr = ''
             for i in request.args.keys():
@@ -196,21 +213,23 @@ def purchasesRetrieve():
                     if len(selectStr)>0:
                         selectStr = selectStr +" OR "
                     selectStr = selectStr + i + " = %s"
+                
+            if len(selectStr)==0:      # if blank search 
+                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
 
-            query =  "Select * FROM Purchases WHERE " + selectStr +  ";" 
-            cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
-            results = (cursor.fetchall())
+            else:
+                query =  "Select * FROM Purchases WHERE " + selectStr +  ";" 
+                cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
+                results = (cursor.fetchall())
             
-            if len(results)==0:
-                results = None
+                if len(results)==0: 
+                    results = None
+
             return retrieve(dbEntity, data= results)
 
         
     else:
-        query = "Select * FROM Customers;"
-        cursor = db.execute_query(db_connection=db_connection, query=query)
-        results = (cursor.fetchall())
-        return retrieve(dbEntity, data=results)
+        return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
 
 @app.route('/items',methods=["GET", "POST"])
 def itemsRetrieve():
@@ -226,6 +245,9 @@ def itemsRetrieve():
             cursor = db.execute_query(db_connection=db_connection, query=query)
             results = (cursor.fetchall())
             return retrieve(dbEntity, data=results)
+
+            if len(results) == 0: #if db is empty 
+               results = None
         
         else:
             paramList = []
@@ -254,20 +276,22 @@ def itemsRetrieve():
                         selectStr = selectStr +" OR "
                     selectStr = selectStr + i + " = %s"
 
-            query =  "Select * FROM Items WHERE " + selectStr +  ";" 
-            cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
-            results = (cursor.fetchall())
+            if len(selectStr)== 0:      # if blank search 
+                return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
+
+            else:
+                query =  "Select * FROM Items WHERE " + selectStr +  ";" 
+                cursor = db.execute_query(db_connection=db_connection, query=query, query_params = tuple(paramList, ))
+                results = (cursor.fetchall())
             
-            if len(results)==0:
-                results = None
-            return retrieve(dbEntity, data= results)
+                if len(results)==0:
+                    results = None
+
+                return retrieve(dbEntity, data= results)
 
         
     else:
-        query = "Select * FROM Items;"
-        cursor = db.execute_query(db_connection=db_connection, query=query)
-        results = (cursor.fetchall())
-        return retrieve(dbEntity, data=results)
+        return render_template("retrieve.j2",dbEntity=dbEntity, search=False, created=False, data=None)
 
 
 # ------------------------------CREATE------------------------------
@@ -343,7 +367,7 @@ def purchasesCreate():
 
     dbEntity = "purchases"
 
-    # formPrefilData is passed to the template
+
     formPrefillData = {'eeIds':[],'customerIds':[]}
     # Get eeId values 
     query = "SELECT eeId FROM Employees;"
@@ -353,13 +377,18 @@ def purchasesCreate():
     query = "SELECT customerId FROM Customers;"
     cursor = db.execute_query(db_connection=db_connection, query=query)
     formPrefillData['customerIds'] = cursor.fetchall()
-    # Get itemId, inventoryOnHand values 
-    query = "SELECT itemId, inventoryOnHand FROM Items;"
+    # Get itemId values 
+    query = "SELECT itemId FROM Items;"
     cursor = db.execute_query(db_connection=db_connection, query=query)
-    # {{formPrefillData['inventoryItems']}} to access a dict of key:val pairs: {itemIds:inventoryOnHand}
+    formPrefillData['itemIds'] = [i['itemId'] for i in cursor.fetchall()] #list > template > js array
+    
+    
+    #LEFT OFF HERE - 
+    # formPrefilData is passed to the template
+    # {{formPrefillData['itemIds']}} to access the itemIds
     # pass those through when the template calls addItems.js
-    formPrefillData['inventoryItems'] = { str(i['itemId']):int(i['inventoryOnHand']) for i in cursor.fetchall()} #list > template > js array
-
+    # create parameters/logic in addItems to take itemIds and put them in the fields
+        # requires do selct that pre-selects based on whether update or create
 
     # Get eeId and customerId data to populate formPrefillData
     if request.method == "GET":
@@ -472,59 +501,26 @@ def update(dbEntity, data, formPrefillData=None):
         colVals = dict(request.form.items())
         updateStr = ""
         for key, val in colVals.items():
- 
-            # For Purchases - update PurchaseItems and Items.inventoryOnHand per itemId and itemQuantity
+            # TODO Temporary bypass on PurchaseItems to get Purchases partially working
+            # ...not quite there. 
             if dbEntity == "purchases" and 'item' in str(key):
-                # Get itemId per item
-                if  'itemId' in str(key):
-                    itemId = str(val)
-                # Get itemQuantity per item 
-                elif 'itemQuantity'in str(key):
-                    itemQuantity = str(val)
-
-                    # Query PurchaseItems to see if Item was an existing PurchaseItem in Purchase
-                    purchaseItemsQuery = "SELECT * FROM PurchaseItems WHERE (purchaseId,itemId) = (%s,%s);"
-                    cursor = db.execute_query(db_connection=db_connection, query=purchaseItemsQuery, query_params=(idValue, itemId,))
-                    results = cursor.fetchall()
-
-                    # Item was an EXISTING PurchaseItem on the Purchase
-                    if len(results) > 0: 
-                        # Difference between new quantity and old
-                        itemInventoryChange = int(results[0]['itemQuantity']) - int(itemQuantity)
-                        # Update Items.inventoryOnHand if there is an inventory change 
-                        if itemInventoryChange != 0:
-                            updateInventoryQuery = "UPDATE Items SET inventoryOnHand=inventoryOnHand+%s WHERE itemId=%s;" 
-                            cursor = db.execute_query(db_connection=db_connection, query=updateInventoryQuery, query_params=(itemInventoryChange, itemId,))
-                            # Update PurchaseItems as well 
-                            # If the change to itemQuantity would make the itemQuantity 0, DELETE item from the PurchaseItems
-                            if int(results[0]['itemQuantity'])-itemInventoryChange == 0:
-                                deltePurchaseItemQuery = "DELETE FROM PurchaseItems WHERE (purchaseId,itemId) = (%s,%s);"
-                                cursor = db.execute_query(db_connection=db_connection, query=deltePurchaseItemQuery, query_params=(idValue, itemId,))
-                            # Otherwise, just update PurchaseItems.itemQuantity
-                            else:
-                                updatePurchaseItemsQuery = "UPDATE PurchaseItems SET itemQuantity=itemQuantity-%s WHERE (purchaseId,itemId) = (%s,%s);" 
-                                cursor = db.execute_query(db_connection=db_connection, query=updatePurchaseItemsQuery, query_params=(itemInventoryChange,idValue, itemId,))
-
-                    # Item is a NEW PurchaseItem on the Purchase
-                    else: 
-                        # Update Items.inventoryOnHand if specified itemQuantity is not 0:
-                        if int(itemQuantity) > 0: 
-                            updateInventoryQuery = "UPDATE Items SET inventoryOnHand=inventoryOnHand-%s WHERE itemId=%s;" 
-                            cursor = db.execute_query(db_connection=db_connection, query=updateInventoryQuery, query_params=(int(itemQuantity), itemId,))
-                            #Update PurchaseItems.itemQuantity
-                            updatePurchaseItemsQuery = "INSERT INTO PurchaseItems (purchaseId,itemId,itemQuantity) VALUES (%s,%s,%s);" 
-                            cursor = db.execute_query(db_connection=db_connection, query=updatePurchaseItemsQuery, query_params=(idValue,itemId,itemQuantity,))
-
-            # All other NON-Purcahse entities, compile parameterized query string for update
+                # if  'itemId' in str(key):
+                #     itemId = str(val)
+                # elif 'itemQuantity'in str(key):
+                #     itemQuantity = str(val)
+                #     query = "UPDATE PurchaseItems SET itemQuantity=%s WHERE purchaseId=%s AND 1=1;" 
+                #     print(query)
+                #     cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(itemQuantity,idValue, ))
+                #     results = cursor.fetchall()
+                pass
             else:
                 updateStr += (f"{str(key)}='{str(val)}', ")
-        
-        # Update all other info 
         updateStr = updateStr[:-2]
         query = "UPDATE "+ dbEntity.title() +" SET "+updateStr+" WHERE " +entityId+"= %s"
         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(idValue,))
         results = cursor.fetchall()
         
+
         # Render success page         
         return render_template("createUpdate.j2", dbEntity=dbEntity, data=dict(request.form.items()), operation="update",updateRecord=None, formPrefillData=formPrefillData, updated=True)
 
@@ -571,18 +567,11 @@ def purchasesUpdate():
     query = "SELECT customerId FROM Customers;"
     cursor = db.execute_query(db_connection=db_connection, query=query)
     formPrefillData['customerIds'] = cursor.fetchall()
-    # # Get itemId values 
-    # query = "SELECT itemId FROM Items;"
-    # cursor = db.execute_query(db_connection=db_connection, query=query)
-    # formPrefillData['itemIds'] = [i['itemId'] for i in cursor.fetchall()] #list > template > js array
-    # NEW 220306
-    # Get itemId, inventoryOnHand values 
-    query = "SELECT itemId, inventoryOnHand FROM Items;"
+    # Get itemId values 
+    query = "SELECT itemId FROM Items;"
     cursor = db.execute_query(db_connection=db_connection, query=query)
-    # {{formPrefillData['inventoryItems']}} to access a dict of key:val pairs: {itemIds:inventoryOnHand}
-    # pass those through when the template calls addItems.js
-    formPrefillData['inventoryItems'] = { str(i['itemId']):int(i['inventoryOnHand']) for i in cursor.fetchall()} #list > template > js array
-
+    formPrefillData['itemIds'] = [i['itemId'] for i in cursor.fetchall()] #list > template > js array
+    
     
         
 
@@ -621,6 +610,7 @@ def delete(dbEntity,data):
 
         entityId = deleteRecord[0][0]
         idValue = deleteRecord[0][1]
+
         query= "SELECT * FROM " + dbEntity.title() + " WHERE " + entityId+ " = %s" 
         cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(idValue, ))       
         deleteRecord = (cursor.fetchall())
@@ -629,13 +619,10 @@ def delete(dbEntity,data):
         # Render the template, pre-populated with subject's existing information from db
         return render_template("delete.j2", dbEntity=dbEntity, data=data, operation="delete", deleteRecord=deleteRecord, deleted=False)
   
-    # Submit new information to confirm delete 
-
+    
     if request.method == "POST":
         
-        return render_template("delete.j2", dbEntity=dbEntity, data=data, operation="delete",deleteRecord=data, deleted = True) 
-
-
+        return render_template("delete.j2", dbEntity=dbEntity, data=(deleteRecord), operation="delete",deleteRecord=data, deleted=True) 
 
 
 
@@ -644,57 +631,12 @@ def purchasesDelete():
     db_connection = db.connect_to_database()
 
     dbEntity = "purchases"
+    data = mockData['purchases']
 
-    if request.method == "GET":
-        purchaseId = request.args['purchaseId']
+    return delete(dbEntity, data)
 
-        query = "SELECT * FROM Purchases WHERE purchaseId = %s " 
-        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(purchaseId, ))       
-        data = (cursor.fetchall())
-
-        
-
-        return delete(dbEntity, data)
-
-    if request.method == "POST":
-        purchaseId= request.form['confirmDelete']
-        #to populate
-        query = "SELECT * FROM Purchases WHERE purchaseId = %s " 
-        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(purchaseId, ))       
-        data = cursor.fetchall()
-
-        #get all purchaseItems with given purchaseID
-        query = "SELECT * FROM PurchaseItems WHERE purchaseId = %s"
-        cursor = db.execute_query(db_connection=db_connection, query=query, query_params=(purchaseId, ))       
-        purchaseItems = (cursor.fetchall())
-
-        
-        #for all things in purchase
-        for x in range(len(purchaseItems)):
-            paramList = []
-            itemId = str((purchaseItems[x]['itemId']))
-            itemQuantity = ((purchaseItems[x]['itemQuantity']))
-            
-
-            #Place cancelled order items back in inventory 
-            updateInventoryQuery = "UPDATE Items SET inventoryOnHand = inventoryOnHand + %s WHERE itemId =%s;"
-            print(updateInventoryQuery)
-            cursor = db.execute_query(db_connection=db_connection, query=updateInventoryQuery, query_params=(itemQuantity, itemId  ))       
-
-            #delete PurchaseItems 
-            deletePurchaseItemsquery = "DELETE FROM PurchaseItems where purchaseId =%s;"
-            cursor = db.execute_query(db_connection=db_connection, query=deletePurchaseItemsquery, query_params=(purchaseId, ))       
-
-
-        deletePurchases = "DELETE FROM Purchases WHERE purchaseId = %s;"
-        print(deletePurchases)
-        cursor = db.execute_query(db_connection=db_connection, query=deletePurchases, query_params=(purchaseId, ))    
-
-
-
-        return delete(dbEntity, data)
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 3838))
+    port = int(os.environ.get('PORT', 3833))
     app.run(host='localhost.',port=port, debug=True)
