@@ -114,6 +114,8 @@ function addFieldsHelper(itemIdVal = null, itemQuantityVal = null, inventoryItem
     itemQuantity.name = "itemQuantity" + (itemNum + 1);
     if (itemQuantityVal === null) {
         itemQuantity.placeholder = "Quantity";
+        // TO DO: Cannot have a 0 item quantity on create
+        // itemQuantity.min = 0;
     } else {
         itemQuantity.value = itemQuantityVal;
         // Set existing item quantity max to the max amount in inventory 
